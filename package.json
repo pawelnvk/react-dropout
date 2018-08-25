@@ -5,5 +5,25 @@
   "main": "src/index.js",
   "repository": "git@github.com:pawelnvk/react-dropout.git",
   "author": "Paweł Nowak<pawelnvk@gmail.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-preset-latest": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
+    "babel-preset-stage-1": "^6.24.1",
+    "prop-types": "^15.6.2",
+    "react": "^16.4.2",
+    "rollup": "^0.65.0",
+    "rollup-plugin-babel": "^3.0.7",
+    "rollup-plugin-commonjs": "^9.1.6",
+    "rollup-plugin-node-resolve": "^3.3.0"
+  },
+  "peerDependencies": {
+    "react": "^16.4.2",
+    "prop-types": "^15.6.2"
+  },
+  "scripts": {
+    "build": "rollup -c",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
 }
