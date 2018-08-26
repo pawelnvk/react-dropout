@@ -9,7 +9,7 @@ pids
 *.seed
 *.pid.lock
 
-build
+dist
 coverage
 node_modules
 typings

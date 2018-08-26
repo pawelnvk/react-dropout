@@ -16,14 +16,17 @@
     "rollup": "^0.65.0",
     "rollup-plugin-babel": "^3.0.7",
     "rollup-plugin-commonjs": "^9.1.6",
-    "rollup-plugin-node-resolve": "^3.3.0"
+    "rollup-plugin-livereload": "^0.6.0",
+    "rollup-plugin-node-resolve": "^3.3.0",
+    "rollup-plugin-serve": "^0.4.2"
   },
   "peerDependencies": {
-    "react": "^16.4.2",
-    "prop-types": "^15.6.2"
+    "prop-types": "^15.6.2",
+    "react": "^16.4.2"
   },
   "scripts": {
-    "build": "rollup -c",
+    "build": "ENVIRONMENT=production rollup -c",
+    "start": "ENVIRONMENT=development rollup -c --watch",
     "test": "echo \"Error: no test specified\" && exit 1"
   }
 }
