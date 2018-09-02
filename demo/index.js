@@ -14,7 +14,7 @@ const navItems = [
   { page: 'Service', path: '/service' },
   { page: 'Articles', path: '/articles' },
   { page: 'Contact', path: '/contact' },
-]
+];
 
 const Logo = () => (
   <div className="logo">
