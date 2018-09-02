@@ -2,6 +2,7 @@ import { func } from 'prop-types';
 import React, { Component, Fragment } from 'react';
 
 import { Consumer } from './context';
+import { Referred } from './Referred';
 
 const style = {
   left: '-100%',
@@ -18,16 +19,16 @@ class Wrapper extends Component {
     registerWrapperRef,
   }) => {
     const { children } = this.props;
-    const element = React.cloneElement(children(items), { ref: registerWrapperRef });
-    const shadowElement = React.cloneElement(children(incrementedItems), {
-      ref: registerShadowWrapperRef,
-      style,
-    });
 
     return (
       <Fragment>
-        {element}
-        {shadowElement}
+        <Referred attach={registerWrapperRef}>{children(items)}</Referred>
+        <Referred
+          attach={registerShadowWrapperRef}
+          style={style}
+        >
+          {children(incrementedItems)}
+        </Referred>
       </Fragment>
     );
   }
