@@ -35,33 +35,22 @@ class Dropout extends Component {
 
   componentDidMount() {
     window.addEventListener('resize', this.handleResize);
+    this.handleResize();
   }
 
   componentWillUnmount() {
     window.removeEventListener('resize', this.handleResize);
   }
 
-  handleResize = () => {
+  handleResize = (event) => {
+    const isTriggeredByEvent = !!event;
     const isShrinking = window.innerWidth < this.prevWindowWidth;
     this.prevWindowWidth = window.innerWidth;
 
-    const { countToHide } = this.state;
-    const { clientWidth: containerWidth } = this.containerRef;
-    const { clientWidth: shadowWrapperWidth } = this.shadowWrapperRef;
-    const { clientWidth: wrapperWidth } = this.wrapperRef;
-
-    if (isShrinking) {
-      if (containerWidth <= wrapperWidth) {
-        this.increaseCountToHide();
-      }
-    } else if (countToHide) {
-      if (countToHide > 1) {
-        if (containerWidth > shadowWrapperWidth) {
-          this.decreaseCountToHide();
-        }
-      } else if (containerWidth > shadowWrapperWidth - this.toggleRef.clientWidth) {
-        this.decreaseCountToHide();
-      }
+    if (!isTriggeredByEvent || isShrinking) {
+      this.handleShrink();
+    } else {
+      this.handleGrow();
     }
   }
 
@@ -85,12 +74,42 @@ class Dropout extends Component {
     this.setState(({ isRestOpened }) => ({ isRestOpened: !isRestOpened }));
   }
 
-  decreaseCountToHide() {
-    this.setState(({ countToHide }) => ({ countToHide: countToHide - 1 }));
+  decreaseCountToHide(callback) {
+    this.setState(({ countToHide }) => ({ countToHide: countToHide - 1 }), callback);
   }
 
-  increaseCountToHide() {
-    this.setState(({ countToHide }) => ({ countToHide: countToHide + 1 }));
+  increaseCountToHide(callback) {
+    this.setState(({ countToHide }) => ({ countToHide: countToHide + 1 }), callback);
+  }
+
+  handleGrow() {
+    const { countToHide } = this.state;
+    const { clientWidth: containerWidth } = this.containerRef;
+    const { clientWidth: shadowWrapperWidth } = this.shadowWrapperRef;
+
+    if (!countToHide) return;
+
+    const { clientWidth } = this.toggleRef;
+    const hasSpaceForLink = containerWidth > shadowWrapperWidth;
+    const hasSpaceForLinkWithoutToggle = containerWidth > shadowWrapperWidth - clientWidth;
+    const isGroupHidden = countToHide > 1;
+    const isOneHidden = countToHide === 1;
+
+    const isMiddleTransition = isGroupHidden && hasSpaceForLink;
+    const isLastTransition = isOneHidden && hasSpaceForLinkWithoutToggle;
+
+    if (isMiddleTransition || isLastTransition) {
+      this.decreaseCountToHide(this.handleGrow);
+    }
+  }
+
+  handleShrink() {
+    const { clientWidth: containerWidth } = this.containerRef;
+    const { clientWidth: wrapperWidth } = this.wrapperRef;
+
+    if (containerWidth <= wrapperWidth) {
+      this.increaseCountToHide(this.handleShrink);
+    }
   }
 
   render() {
