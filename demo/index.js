@@ -23,31 +23,56 @@ const Logo = () => (
 );
 
 const Nav = () => (
-  <nav className="navigation">
-    <ul className="navigation__list">
-      {navItems.map(({ page, path }) => (
-        <li className="navigation__item" key={path}>
-          <Link className="navigation__link" to={path}>{page}</Link>
-        </li>
-      ))}
-    </ul>
-  </nav>
+  <Dropout items={navItems}>
+    <nav className="navigation">
+      <Dropout.Wrapper>
+        {items => (
+          <ul className="navigation__list">
+            {items.map(({ page, path }) => (
+              <li className="navigation__item" key={path}>
+                <Link className="navigation__link" to={path}>{page}</Link>
+              </li>
+            ))}
+            <Dropout.Toggle>
+              {({ isToggled, toggle }) => (
+                <li className="navigation__item navigation__item--toggle">
+                  <button className="navigation__link" onClick={toggle}>
+                    {isToggled ? 'Less' : 'More'}
+                  </button>
+
+                  <Dropout.Rest>
+                    {items => (
+                      <ul className="subnav">
+                        {items.map(({ page, path }) => (
+                          <li className="subnav__item" key={path}>
+                            <Link className="subnav__link" to={path}>{page}</Link>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </Dropout.Rest>
+                </li>
+              )}
+            </Dropout.Toggle>
+          </ul>
+        )}
+      </Dropout.Wrapper>
+    </nav>
+  </Dropout>
 );
 
 const App = () => (
   <Router>
-    <div>
-      <header className="header">
-        <Dropout>
-          <div className="header__container u-container">
-            <Logo />
+    <div className="app">
+      <header className="app__header header">
+        <div className="header__container u-container">
+          <Logo />
 
-            <Nav />
-          </div>
-        </Dropout>
+          <Nav />
+        </div>
       </header>
 
-      <main>
+      <main className="app__main">
         <Switch>
           {navItems.map(({ exact, page, path }) => (
             <Route

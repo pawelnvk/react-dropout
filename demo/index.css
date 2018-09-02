@@ -4,6 +4,14 @@ body {
   font-family: 'Open Sans', sans-serif;
 }
 
+.app {
+  height: 100vh;
+}
+
+.app__main {
+  height: 100%;
+}
+
 .header {
   background-color: #3a3c3e;
 }
@@ -21,7 +29,13 @@ body {
   text-transform: uppercase;
 }
 
+.navigation {
+  text-align: right;
+  width: 100%;
+}
+
 .navigation__list {
+  display: inline-block;
   list-style: none;
   margin: 0;
   padding: 0;
@@ -32,26 +46,69 @@ body {
   padding: 15px 20px;
 }
 
+.navigation__item--toggle {
+  position: relative;
+}
+
 .navigation__link {
+  background: none;
+  border: none;
   color: #e7e8ea;
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.11em;
+  line-height: inherit;
+  outline: none;
   text-decoration: none;
   text-transform: uppercase;
   transition: 0.2s ease color;
+  -webkit-appearance: none;
 }
 
 .navigation__link:hover {
   color: #ffd101;
 }
 
+.subnav {
+  background-color: #3a3c3e;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  right: 0;
+  top: 100%;
+}
+
+.subnav__link {
+  background: none;
+  border: none;
+  color: #e7e8ea;
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.11em;
+  line-height: inherit;
+  padding: 15px 20px;
+  outline: none;
+  text-align: left;
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: 0.2s ease color;
+  -webkit-appearance: none;
+}
+
+.subnav__link:hover {
+  color: #ffd101;
+}
+
 .page {
+  align-items: center;
+  display: flex;
   font-size: 60px;
   font-weight: 700;
+  height: 100%;
+  justify-content: center;
   letter-spacing: 0.15em;
-  padding: 25vh 0;
-  text-align: center;
   text-transform: uppercase;
 }
 
