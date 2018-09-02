@@ -54,6 +54,12 @@ const Nav = () => (
 );
 ```
 
+## API
+- `Dropout`
+- `Dropout.Wrapper`
+- `Dropout.Toggle`
+- `Dropout.Rest`
+
 ## Contributing guidelines
 Remember to install all dependencies with help of `yarn`.
 
