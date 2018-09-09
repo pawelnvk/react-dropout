@@ -1,6 +1,12 @@
 module.exports = {
   extends: 'airbnb',
   globals: {
+    beforeEach: true,
+    describe: true,
+    document: true,
+    expect: true,
+    it: true,
+    jest: true,
     window: true
   },
   parser: 'babel-eslint',

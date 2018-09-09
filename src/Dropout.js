@@ -10,6 +10,7 @@ import { Provider } from './context';
 import { Rest } from './Rest';
 import { Toggle } from './Toggle';
 import { Wrapper } from './Wrapper';
+import { Referred } from './Referred';
 
 class Dropout extends Component {
   static Rest = Rest
@@ -18,20 +19,20 @@ class Dropout extends Component {
 
   static Wrapper = Wrapper
 
-  containerRef = null
+  containerRef = {}
 
   prevWindowWidth = window.innerWidth
 
-  toggleRef = null
+  toggleRef = {}
 
-  shadowWrapperRef = null
+  shadowWrapperRef = {}
 
   state = {
     countToHide: 0,
     isRestOpened: false,
   }
 
-  wrapperRef = null
+  wrapperRef = {}
 
   componentDidMount() {
     window.addEventListener('resize', this.handleResize);
@@ -116,7 +117,6 @@ class Dropout extends Component {
     const { children, items } = this.props;
     const { countToHide, isRestOpened } = this.state;
     const element = React.Children.only(children);
-    const elementWithRef = React.cloneElement(element, { ref: this.registerContainerRef });
     const rangeIndex = items.length - countToHide;
 
     return (
@@ -133,7 +133,9 @@ class Dropout extends Component {
           toggleRest: this.toggleRest,
         }}
       >
-        {elementWithRef}
+        <Referred attach={this.registerContainerRef}>
+          {element}
+        </Referred>
       </Provider>
     );
   }
@@ -141,7 +143,11 @@ class Dropout extends Component {
 
 Dropout.propTypes = {
   children: node.isRequired,
-  items: arrayOf(objectOf(any)).isRequired,
+  items: arrayOf(objectOf(any)),
+};
+
+Dropout.defaultProps = {
+  items: [],
 };
 
 export { Dropout };
