@@ -40,7 +40,8 @@
   "scripts": {
     "build": "ENVIRONMENT=production rollup -c",
     "start": "ENVIRONMENT=development rollup -c --watch",
-    "test": "jest --env=jsdom"
+    "test": "jest --env=jsdom",
+    "test:ci": "jest --env=jsdom --coverage"
   },
   "jest": {
     "collectCoverageFrom": [
