@@ -13,6 +13,8 @@ const getWrapper = (props = {}) => {
   return shallow(<Dropout {...defaultProps} {...props} />);
 };
 
+const getInstance = () => getWrapper().instance();
+
 describe('Dropout', () => {
   beforeEach(() => {
     jest.clearAllMocks();
@@ -25,9 +27,9 @@ describe('Dropout', () => {
   });
 
   describe('Provider', () => {
-    it('is present', () => {
-      const wrapper = getWrapper();
+    const wrapper = getWrapper();
 
+    it('is present', () => {
       expect(wrapper.find(Provider).length).toEqual(1);
     });
 
@@ -44,22 +46,18 @@ describe('Dropout', () => {
         toggleRest: expect.any(Function),
       });
 
-      const wrapper = getWrapper();
-
       expect(wrapper.find(Provider).prop('value')).toEqual(expected);
     });
   });
 
   describe('Referred', () => {
-    it('is present', () => {
-      const wrapper = getWrapper();
+    const wrapper = getWrapper();
 
+    it('is present', () => {
       expect(wrapper.find(Referred).length).toEqual(1);
     });
 
     it('passes attach', () => {
-      const wrapper = getWrapper();
-
       const { registerContainerRef } = wrapper.instance();
       expect(wrapper.find(Referred).prop('attach')).toEqual(registerContainerRef);
     });
@@ -67,7 +65,7 @@ describe('Dropout', () => {
 
   describe('handleResize', () => {
     it('is called on mount', () => {
-      const instance = getWrapper().instance();
+      const instance = getInstance();
       const handleResize = jest.spyOn(instance, 'handleResize');
 
       instance.componentDidMount();
@@ -78,7 +76,7 @@ describe('Dropout', () => {
     it('is attached to window on mount', () => {
       const addEventListener = jest.spyOn(window, 'addEventListener');
 
-      const instance = getWrapper().instance();
+      const instance = getInstance();
 
       expect(addEventListener).toHaveBeenCalledWith('resize', instance.handleResize);
     });
@@ -94,7 +92,7 @@ describe('Dropout', () => {
     });
 
     it('calls handleShrink if no event provided', () => {
-      const instance = getWrapper().instance();
+      const instance = getInstance();
       const handleShrink = jest.spyOn(instance, 'handleShrink');
 
       instance.handleResize();
@@ -104,7 +102,7 @@ describe('Dropout', () => {
 
     it('calls handleShrink if window is shrinking', () => {
       const event = {};
-      const instance = getWrapper().instance();
+      const instance = getInstance();
       const handleShrink = jest.spyOn(instance, 'handleShrink');
       instance.prevWindowWidth = 100;
       window.innerWidth = 90;
@@ -116,7 +114,7 @@ describe('Dropout', () => {
 
     it('calls handleGrow if window is shrinking', () => {
       const event = {};
-      const instance = getWrapper().instance();
+      const instance = getInstance();
       const handleGrow = jest.spyOn(instance, 'handleGrow');
       instance.prevWindowWidth = 90;
       window.innerWidth = 100;
@@ -128,37 +126,28 @@ describe('Dropout', () => {
   });
 
   describe('references', () => {
-    it('adds container ref', () => {
-      const instance = getWrapper().instance();
-      const ref = window;
+    const instance = getInstance();
+    const ref = window;
 
+    it('adds container ref', () => {
       instance.registerContainerRef(ref);
 
       expect(instance.containerRef).toEqual(ref);
     });
 
     it('adds shadow wrapper ref', () => {
-      const instance = getWrapper().instance();
-      const ref = window;
-
       instance.registerShadowWrapperRef(ref);
 
       expect(instance.shadowWrapperRef).toEqual(ref);
     });
 
     it('adds toggle ref', () => {
-      const instance = getWrapper().instance();
-      const ref = window;
-
       instance.registerToggleRef(ref);
 
       expect(instance.toggleRef).toEqual(ref);
     });
 
     it('adds wrapper ref', () => {
-      const instance = getWrapper().instance();
-      const ref = window;
-
       instance.registerWrapperRef(ref);
 
       expect(instance.wrapperRef).toEqual(ref);
@@ -166,25 +155,25 @@ describe('Dropout', () => {
   });
 
   describe('isRestOpened', () => {
-    it('is initially set to false', () => {
-      const wrapper = getWrapper();
+    let instance;
+    let wrapper;
 
+    beforeEach(() => {
+      wrapper = getWrapper();
+      instance = wrapper.instance();
+    });
+
+    it('is initially set to false', () => {
       expect(wrapper.state('isRestOpened')).toEqual(false);
     });
 
     it('switches isRestOpened when calling toggleRest between false and true', () => {
-      const wrapper = getWrapper();
-      const instance = wrapper.instance();
-
       instance.toggleRest();
 
       expect(wrapper.state('isRestOpened')).toEqual(true);
     });
 
     it('switches isRestOpened when calling toggleRest between true and false', () => {
-      const wrapper = getWrapper();
-      const instance = wrapper.instance();
-
       instance.toggleRest();
       instance.toggleRest();
 
@@ -244,7 +233,7 @@ describe('Dropout', () => {
 
   describe('handleShrink', () => {
     it('calls increaseCountToHide if wrapper width meets container width', () => {
-      const instance = getWrapper().instance();
+      const instance = getInstance();
       const increaseCountToHide = jest.spyOn(instance, 'increaseCountToHide')
         .mockImplementation(() => null);
       instance.containerRef = { clientWidth: 700 };
@@ -256,7 +245,7 @@ describe('Dropout', () => {
     });
 
     it('does not call increaseCountToHide if wrapper width is less than container width', () => {
-      const instance = getWrapper().instance();
+      const instance = getInstance();
       const increaseCountToHide = jest.spyOn(instance, 'increaseCountToHide');
       instance.containerRef = { clientWidth: 700 };
       instance.wrapperRef = { clientWidth: 600 };
@@ -269,7 +258,7 @@ describe('Dropout', () => {
 
   describe('handleGrow', () => {
     it('does not call decreaseCountToHide if there is no elements to hide', () => {
-      const instance = getWrapper().instance();
+      const instance = getInstance();
       const decreaseCountToHide = jest.spyOn(instance, 'decreaseCountToHide');
       instance.state.countToHide = 0;
 
@@ -279,7 +268,7 @@ describe('Dropout', () => {
     });
 
     it('calls decreaseCountToHide in the middle transition if shadowWrapper width is lower than container width', () => {
-      const instance = getWrapper().instance();
+      const instance = getInstance();
       const decreaseCountToHide = jest.spyOn(instance, 'decreaseCountToHide')
         .mockImplementation(() => null);
       instance.containerRef = { clientWidth: 800 };
@@ -293,7 +282,7 @@ describe('Dropout', () => {
     });
 
     it('calls decreaseCountToHide in the last transition if difference between shadowWrapper width and toggle width is lower than container width', () => {
-      const instance = getWrapper().instance();
+      const instance = getInstance();
       const decreaseCountToHide = jest.spyOn(instance, 'decreaseCountToHide')
         .mockImplementation(() => null);
       instance.containerRef = { clientWidth: 900 };
