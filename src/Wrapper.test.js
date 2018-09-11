@@ -3,7 +3,21 @@ import React from 'react';
 
 import { Consumer } from './context';
 import { Referred } from './Referred';
+import {
+  mergeConditions,
+  wrapperHasNoProp,
+  wrapperHasProp,
+  wrapperIsType,
+} from './utils';
 import { Wrapper } from './Wrapper';
+
+const getRenderProps = (override = {}) => ({
+  incrementedItems: ['item', 'item'],
+  items: ['item'],
+  registerShadowWrapperRef: jest.fn(),
+  registerWrapperRef: jest.fn(),
+  ...override,
+});
 
 const getWrapper = (props = {}) => {
   const defaultProps = {
@@ -32,44 +46,27 @@ describe('Wrapper', () => {
 
   describe('actual nodes', () => {
     it('renders Referred', () => {
-      const incrementedItems = ['item', 'item'];
-      const items = ['item'];
-      const registerShadowWrapperRef = jest.fn();
       const registerWrapperRef = jest.fn();
-      const children = jest.fn(() => <div />);
-      const instance = getWrapper({ children }).instance();
+      const renderProps = getRenderProps({ registerWrapperRef });
+      const instance = getWrapper().instance();
 
-      const Result = () => instance.renderWithShadowElement({
-        incrementedItems,
-        items,
-        registerShadowWrapperRef,
-        registerWrapperRef,
-      });
+      const Result = () => instance.renderWithShadowElement(renderProps);
 
-      const referred = shallow(<Result />).findWhere((innerWrapper) => {
-        const hasReferredType = innerWrapper.type() === Referred;
-        const hasNoStyles = !innerWrapper.prop('style');
-
-        return hasReferredType && hasNoStyles;
-      });
+      const referred = shallow(<Result />).findWhere(mergeConditions(
+        wrapperHasNoProp('style'),
+        wrapperIsType(Referred),
+      ));
       expect(referred.length).toEqual(1);
       expect(referred.prop('attach')).toEqual(registerWrapperRef);
     });
 
     it('calls children with items', () => {
-      const incrementedItems = ['item', 'item'];
       const items = ['item'];
-      const registerShadowWrapperRef = jest.fn();
-      const registerWrapperRef = jest.fn();
+      const renderProps = getRenderProps({ items });
       const children = jest.fn(() => <div />);
       const instance = getWrapper({ children }).instance();
 
-      instance.renderWithShadowElement({
-        incrementedItems,
-        items,
-        registerShadowWrapperRef,
-        registerWrapperRef,
-      });
+      instance.renderWithShadowElement(renderProps);
 
       expect(children).toHaveBeenCalledWith(items);
     });
@@ -77,44 +74,28 @@ describe('Wrapper', () => {
 
   describe('shadow nodes', () => {
     it('renders Referred', () => {
-      const incrementedItems = ['item', 'item'];
-      const items = ['item'];
       const registerShadowWrapperRef = jest.fn();
-      const registerWrapperRef = jest.fn();
-      const children = jest.fn(() => <div />);
-      const instance = getWrapper({ children }).instance();
+      const renderProps = getRenderProps({ registerShadowWrapperRef });
+      const instance = getWrapper().instance();
 
-      const Result = () => instance.renderWithShadowElement({
-        incrementedItems,
-        items,
-        registerShadowWrapperRef,
-        registerWrapperRef,
-      });
+      const Result = () => instance.renderWithShadowElement(renderProps);
 
-      const referred = shallow(<Result />).findWhere((innerWrapper) => {
-        const hasReferredType = innerWrapper.type() === Referred;
-        const hasNoStyles = innerWrapper.prop('style');
 
-        return hasReferredType && hasNoStyles;
-      });
+      const referred = shallow(<Result />).findWhere(mergeConditions(
+        wrapperHasProp('style'),
+        wrapperIsType(Referred),
+      ));
       expect(referred.length).toEqual(1);
       expect(referred.prop('attach')).toEqual(registerShadowWrapperRef);
     });
 
     it('calls children with incrementedItems', () => {
       const incrementedItems = ['item', 'item'];
-      const items = ['item'];
-      const registerShadowWrapperRef = jest.fn();
-      const registerWrapperRef = jest.fn();
+      const renderProps = getRenderProps({ incrementedItems });
       const children = jest.fn(() => <div />);
       const instance = getWrapper({ children }).instance();
 
-      instance.renderWithShadowElement({
-        incrementedItems,
-        items,
-        registerShadowWrapperRef,
-        registerWrapperRef,
-      });
+      instance.renderWithShadowElement(renderProps);
 
       expect(children).toHaveBeenCalledWith(incrementedItems);
     });
