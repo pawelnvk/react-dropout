@@ -9,7 +9,9 @@ pids
 *.seed
 *.pid.lock
 
+.circleci
 coverage
+demo
 node_modules
 typings
 .babelrc
