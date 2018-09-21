@@ -6,6 +6,13 @@
   "repository": "git@github.com:pawelnvk/react-dropout.git",
   "author": "Paweł Nowak<pawelnvk@gmail.com>",
   "license": "MIT",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "bugs": {
+    "url": "https://github.com/pawelnvk/react-dropout/issues"
+  },
   "devDependencies": {
     "@babel/standalone": "^7.0.0",
     "babel-core": "^6.26.3",
@@ -39,6 +46,9 @@
   },
   "scripts": {
     "build": "ENVIRONMENT=production rollup -c",
+    "clean": "rimraf dist",
+    "lint": "yarn eslint src",
+    "prepublish": "yarn clean && yarn lint && yarn test:ci && yarn build",
     "start": "ENVIRONMENT=development rollup -c --watch",
     "test": "jest --env=jsdom --watch",
     "test:ci": "jest --env=jsdom --coverage"
