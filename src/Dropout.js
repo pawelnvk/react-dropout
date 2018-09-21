@@ -23,14 +23,14 @@ class Dropout extends Component {
 
   prevWindowWidth = window.innerWidth
 
-  toggleRef = {}
-
   shadowWrapperRef = {}
 
   state = {
     countToHide: 0,
     isRestOpened: false,
   }
+
+  toggleRef = {}
 
   wrapperRef = {}
 
