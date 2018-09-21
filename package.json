@@ -1,6 +1,6 @@
 {
   "name": "react-dropout",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Easy way of managing navigation in react based apps.",
   "main": "dist/index.js",
   "repository": "git@github.com:pawelnvk/react-dropout.git",
