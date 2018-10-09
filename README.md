@@ -63,7 +63,7 @@ const Nav = () => (
 Container component that will be used to determine available width. It accepts following props:
 
 - `children` - DOM element that `ref` will be attached to, it's important for direct descendant to be DOM node
-- `items` - list of object to parse that will be available to display in `Dropout.Wrapper` and `Dropout.Rest`
+- `items` - list of object to parse that will be available to display in `Dropout.Wrapper` and `Dropout.Rest`, items can be extended by `grade` property to indicate which of them should be hidden firstly lowest grade is the most important and it will be hidden last
 
 Example:
 
