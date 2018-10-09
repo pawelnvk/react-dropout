@@ -1,3 +1,9 @@
+export const getItemsIdsByGrades = (items = []) => Object.entries(items)
+  .sort(([, { grade: gradeA }], [, { grade: gradeB }]) => gradeA - gradeB)
+  .map(([id]) => Number(id));
+
+export const hasIndex = ids => (value, index) => ids.indexOf(index) !== -1;
+
 export const mergeConditions = (...funcs) => value => (
   funcs.reduce((acc, func) => acc && func(value), true)
 );

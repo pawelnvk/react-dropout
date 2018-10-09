@@ -8,12 +8,12 @@ const {
 const root = document.querySelector('#root');
 
 const navItems = [
-  { exact: true, page: 'Home', path: '/' },
-  { page: 'About', path: '/about' },
-  { page: 'Products', path: '/products' },
-  { page: 'Service', path: '/service' },
-  { page: 'Articles', path: '/articles' },
-  { page: 'Contact', path: '/contact' },
+  { grade: 4, exact: true, page: 'Home', path: '/' },
+  { grade: 6, page: 'About', path: '/about' },
+  { grade: 1, page: 'Products', path: '/products' },
+  { grade: 2, page: 'Service', path: '/service' },
+  { grade: 7, page: 'Articles', path: '/articles' },
+  { grade: 3, page: 'Contact', path: '/contact' },
 ];
 
 const Logo = () => (
