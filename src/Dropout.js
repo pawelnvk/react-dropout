@@ -1,8 +1,8 @@
 import {
-  any,
   arrayOf,
   node,
-  objectOf,
+  number,
+  shape,
 } from 'prop-types';
 import React, { Component } from 'react';
 
@@ -11,6 +11,7 @@ import { Rest } from './Rest';
 import { Toggle } from './Toggle';
 import { Wrapper } from './Wrapper';
 import { Referred } from './Referred';
+import { getItemsIdsByGrades, hasIndex } from './utils';
 
 class Dropout extends Component {
   static Rest = Rest
@@ -118,18 +119,22 @@ class Dropout extends Component {
     const { countToHide, isRestOpened } = this.state;
     const element = React.Children.only(children);
     const rangeIndex = items.length - countToHide;
+    const idsByGrades = getItemsIdsByGrades(items);
+    const incrementedIds = idsByGrades.slice(0, rangeIndex + 1);
+    const ids = idsByGrades.slice(0, rangeIndex);
+    const restIds = idsByGrades.slice(rangeIndex);
 
     return (
       <Provider
         value={{
           countToHide,
-          incrementedItems: items.slice(0, rangeIndex + 1),
+          incrementedItems: items.filter(hasIndex(incrementedIds)),
           isRestOpened,
-          items: items.slice(0, rangeIndex),
+          items: items.filter(hasIndex(ids)),
           registerToggleRef: this.registerToggleRef,
           registerShadowWrapperRef: this.registerShadowWrapperRef,
           registerWrapperRef: this.registerWrapperRef,
-          restItems: items.slice(rangeIndex),
+          restItems: items.filter(hasIndex(restIds)),
           toggleRest: this.toggleRest,
         }}
       >
@@ -143,7 +148,9 @@ class Dropout extends Component {
 
 Dropout.propTypes = {
   children: node.isRequired,
-  items: arrayOf(objectOf(any)),
+  items: arrayOf(shape({
+    grade: number,
+  })),
 };
 
 Dropout.defaultProps = {
