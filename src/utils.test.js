@@ -1,4 +1,6 @@
 import {
+  getItemsIdsByGrades,
+  hasIndex,
   mergeConditions,
   wrapperHasNoProp,
   wrapperHasProp,
@@ -10,6 +12,58 @@ const Component = () => null;
 const getWrapper = () => ({
   prop: jest.fn(),
   type: jest.fn(),
+});
+
+describe('getItemsIdsByGrades', () => {
+  it('returns items ids by grade value', () => {
+    const items = [
+      { grade: 2 },
+      { grade: 5 },
+      { grade: 1 },
+      { grade: 7 },
+      { grade: 3 },
+    ];
+    const expected = [2, 0, 4, 1, 3];
+
+    const result = getItemsIdsByGrades(items);
+
+    expect(result).toEqual(expected);
+  });
+
+  it('does not move items if no grades provided', () => {
+    const items = [
+      {},
+      {},
+      {},
+      {},
+      {},
+    ];
+    const expected = [0, 1, 2, 3, 4];
+
+    const result = getItemsIdsByGrades(items);
+
+    expect(result).toEqual(expected);
+  });
+});
+
+describe('hasIndex', () => {
+  it('returns true if index of item is included in provided list', () => {
+    const ids = [2];
+    const item = [{}, 2];
+
+    const result = hasIndex(ids)(...item);
+
+    expect(result).toBeTruthy();
+  });
+
+  it('returns false if index of item is not included in provided list', () => {
+    const ids = [1];
+    const item = [{}, 2];
+
+    const result = hasIndex(ids)(...item);
+
+    expect(result).toBeFalsy();
+  });
 });
 
 describe('mergeConditions', () => {
