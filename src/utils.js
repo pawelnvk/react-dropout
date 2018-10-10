@@ -1,5 +1,8 @@
 export const getItemsIdsByGrades = (items = []) => Object.entries(items)
-  .sort(([, { grade: gradeA }], [, { grade: gradeB }]) => gradeA - gradeB)
+  .sort((
+    [indexA, { grade: gradeA = Number(indexA) + items.length }],
+    [indexB, { grade: gradeB = Number(indexB) + items.length }],
+  ) => gradeA - gradeB)
   .map(([id]) => Number(id));
 
 export const hasIndex = ids => (value, index) => ids.indexOf(index) !== -1;
