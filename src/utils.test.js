@@ -32,13 +32,19 @@ describe('getItemsIdsByGrades', () => {
 
   it('does not move items if no grades provided', () => {
     const items = [
-      {},
-      {},
-      {},
-      {},
-      {},
+      { exact: true, page: 'Home', path: '/' },
+      { page: 'About', path: '/about' },
+      { page: 'History', path: '/history' },
+      { page: 'Career', path: '/career' },
+      { page: 'Blog', path: '/blog' },
+      { page: 'Help', path: '/help' },
+      { page: 'FAQ', path: '/faq' },
+      { page: 'Products', path: '/products' },
+      { page: 'Service', path: '/service' },
+      { page: 'Articles', path: '/articles' },
+      { page: 'Contact', path: '/contact' },
     ];
-    const expected = [0, 1, 2, 3, 4];
+    const expected = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
     const result = getItemsIdsByGrades(items);
 
