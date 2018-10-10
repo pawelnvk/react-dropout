@@ -1,3 +1,13 @@
+html {
+  box-sizing: border-box;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
 body {
   background-color: #d9d9d9;
   color: #3a3c3e;
@@ -13,7 +23,9 @@ body {
 }
 
 .header {
-  background-color: #3a3c3e;
+  background-color: #ffffff;
+  border-bottom: 1px solid #e0e0e0;
+  display: flex;
 }
 
 .header__container {
@@ -35,7 +47,7 @@ body {
 }
 
 .navigation__list {
-  display: inline-block;
+  display: inline-flex;
   list-style: none;
   margin: 0;
   padding: 0;
@@ -43,52 +55,66 @@ body {
 
 .navigation__item {
   display: inline-block;
-  padding: 15px 20px;
 }
 
 .navigation__item--toggle {
+  border-left: 1px solid #e0e0e0;
   position: relative;
 }
 
 .navigation__link {
   background: none;
   border: none;
-  color: #e7e8ea;
-  font-size: 12px;
-  font-weight: 700;
+  color: #656565;
+  cursor: pointer;
+  display: inline-block;
+  font-size: 14px;
   letter-spacing: 0.11em;
   line-height: inherit;
   outline: none;
+  padding: 18px 12px;
   text-decoration: none;
   text-transform: uppercase;
   transition: 0.2s ease color;
   -webkit-appearance: none;
 }
 
+.navigation__link--toggle {
+  align-items: center;
+  background-color: #fff;
+  display: flex;
+  text-align: left;
+  width: 100px;
+}
+
 .navigation__link:hover {
-  color: #ffd101;
+  color: #f41f0d;
+}
+.navigation__link:hover .hamburger__line {
+  background-color: #f41f0d;
 }
 
 .subnav {
-  background-color: #3a3c3e;
+  background-color: #ffffff;
   list-style: none;
   margin: 0;
+  min-width: 200px;
   padding: 0;
-  position: absolute;
-  right: 0;
-  top: 100%;
+}
+
+.subnav__item {
+  border-top: 1px solid #e0e0e0;
 }
 
 .subnav__link {
   background: none;
   border: none;
-  color: #e7e8ea;
+  color: #656565;
   display: block;
-  font-size: 12px;
-  font-weight: 700;
+  font-size: 14px;
   letter-spacing: 0.11em;
   line-height: inherit;
-  padding: 15px 20px;
+  padding: 18px 12px;
   outline: none;
   text-align: left;
   text-decoration: none;
@@ -98,22 +124,122 @@ body {
 }
 
 .subnav__link:hover {
-  color: #ffd101;
+  color: #f41f0d;
 }
 
 .page {
   align-items: center;
+  background-size: cover;
+  color: #ffffff;
   display: flex;
   font-size: 60px;
   font-weight: 700;
   height: 100%;
   justify-content: center;
   letter-spacing: 0.15em;
+  position: relative;
   text-transform: uppercase;
+}
+
+.page::before {
+  background-color: rgba(0, 0, 0, 0.3);
+  bottom: 0;
+  content: ';
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: 0;
+}
+
+.page--home {
+  background-image: url('https://picsum.photos/1600/900/?image=1065');
+}
+
+.page--about {
+  background-image: url('https://picsum.photos/1600/900/?image=1063');
+}
+
+.page--contact {
+  background-image: url('https://picsum.photos/1600/900/?image=1067');
+}
+
+.page--service {
+  background-image: url('https://picsum.photos/1600/900/?image=1047');
+}
+
+.page--products {
+  background-image: url('https://picsum.photos/1600/900/?image=999');
+}
+
+.page--articles {
+  background-image: url('https://picsum.photos/1600/900/?image=965');
+}
+
+.page__content {
+  position: relative;
+  z-index: 0;
 }
 
 .u-container {
   margin: auto;
-  max-width: 960px;
+  max-width: 980px;
+  padding: 0 10px;
   width: 100%;
+}
+
+.hamburger {
+  display: inline-block;
+  margin-right: 10px;
+}
+
+.hamburger__line {
+  display: block;
+  width: 14px;
+  height: 2px;
+  background-color: #656565;
+  margin: 2px auto;
+  transition: all 0.3s ease-in-out;
+}
+
+.hamburger:hover {
+  cursor: pointer;
+}
+
+.hamburger.is-active .hamburger__line--2 {
+  opacity: 0;
+}
+
+.hamburger.is-active .hamburger__line--1 {
+  transform: translateY(4px) rotate(45deg);
+}
+
+.hamburger.is-active .hamburger__line--3 {
+  transform: translateY(-4px) rotate(-45deg);
+}
+
+.dropdown__overlay {
+  background-color: rgba(0, 0, 0, 0.3);
+  border: none;
+  bottom: 0;
+  left: 0;
+  padding: 0;
+  position: fixed;
+  right: 0;
+  top: 0;
+  width: 100%;
+  z-index: 10;
+}
+
+.dropdown__toggle {
+  position: relative;
+  z-index: 10;
+}
+
+.dropdown__content {
+  bottom: 0;
+  position: fixed;
+  right: 0;
+  top: 52px;
+  z-index: 10;
 }
