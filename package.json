@@ -10,6 +10,15 @@
     "dist",
     "src"
   ],
+  "keywords": [
+    "responsive",
+    "respo",
+    "navigation",
+    "nav",
+    "smart",
+    "greedy",
+    "react"
+  ],
   "bugs": {
     "url": "https://github.com/pawelnvk/react-dropout/issues"
   },
