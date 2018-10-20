@@ -1,3 +1,5 @@
+const prettierConfig = require('./.prettierrc');
+
 module.exports = {
   extends: ['airbnb', 'plugin:prettier/recommended'],
   globals: {
@@ -14,7 +16,7 @@ module.exports = {
   rules: {
     'import/no-extraneous-dependencies': 0,
     'import/prefer-default-export': 0,
-    'prettier/prettier': 'error',
+    'prettier/prettier': ['error', prettierConfig],
     'react/jsx-filename-extension': 0,
   },
 };
