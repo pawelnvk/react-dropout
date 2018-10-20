@@ -6,7 +6,18 @@
 
 Easy way of managing navigation in react-based apps.
 
+## Installation
+
+```sh
+npm install --save react-dropout
+```
+
+```sh
+yarn add react-dropout
+```
+
 ## Usage
+
 ```jsx
 const navItems = [
   { exact: true, page: 'Home', path: '/' },
@@ -25,7 +36,9 @@ const Nav = () => (
           <ul className="navigation__list">
             {items.map(({ page, path }) => (
               <li className="navigation__item" key={path}>
-                <Link className="navigation__link" to={path}>{page}</Link>
+                <Link className="navigation__link" to={path}>
+                  {page}
+                </Link>
               </li>
             ))}
             <Dropout.Toggle>
@@ -40,7 +53,9 @@ const Nav = () => (
                       <ul className="subnav">
                         {items.map(({ page, path }) => (
                           <li className="subnav__item" key={path}>
-                            <Link className="subnav__link" to={path}>{page}</Link>
+                            <Link className="subnav__link" to={path}>
+                              {page}
+                            </Link>
                           </li>
                         ))}
                       </ul>
@@ -60,6 +75,7 @@ const Nav = () => (
 ## API
 
 ### `Dropout`
+
 Container component that will be used to determine available width. It accepts following props:
 
 - `children` - DOM element that `ref` will be attached to, it's important for direct descendant to be DOM node
@@ -79,14 +95,13 @@ const items = [
 
 const Nav = () => (
   <Dropout items={items}>
-    <nav className="navigation">
-      {/* code */}
-    </nav>
+    <nav className="navigation">{/* code */}</nav>
   </Dropout>
 );
 ```
 
 ### `Dropout.Wrapper`
+
 Main items container that will be displaying content fitting in `Dropout` child. It accepts following props:
 
 - `children` - children as a function called with render props, direct descendant should be DOM node, to this node ref will be attached
@@ -103,7 +118,9 @@ Example:
     <ul className="navigation__list">
       {items.map(({ page, path }) => (
         <li className="navigation__item" key={path}>
-          <Link className="navigation__link" to={path}>{page}</Link>
+          <Link className="navigation__link" to={path}>
+            {page}
+          </Link>
         </li>
       ))}
       {/* code */}
@@ -113,6 +130,7 @@ Example:
 ```
 
 ### `Dropout.Toggle`
+
 Holder of toggle button. It should be placed inside `Dropout.Wrapper`. It accepts following props:
 
 - `children` - children as a function called with render props, direct descendant should be DOM node, to this node ref will be attached
@@ -139,6 +157,7 @@ Example:
 ```
 
 ### `Dropout.Rest`
+
 Container of elements that aren't fitting in `Dropout.Wrapper`. It accepts following props:
 
 - `children` - children as a function called with render props, direct descendant should be DOM node, to this node ref will be attached
@@ -155,7 +174,9 @@ Example:
     <ul className="subnav">
       {items.map(({ page, path }) => (
         <li className="subnav__item" key={path}>
-          <Link className="subnav__link" to={path}>{page}</Link>
+          <Link className="subnav__link" to={path}>
+            {page}
+          </Link>
         </li>
       ))}
     </ul>
