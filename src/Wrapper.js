@@ -23,20 +23,15 @@ class Wrapper extends Component {
     return (
       <Fragment>
         <Referred attach={registerWrapperRef}>{children(items)}</Referred>
-        <Referred
-          attach={registerShadowWrapperRef}
-          style={style}
-        >
+        <Referred attach={registerShadowWrapperRef} style={style}>
           {children(incrementedItems)}
         </Referred>
       </Fragment>
     );
-  }
+  };
 
   render() {
-    return (
-      <Consumer>{this.renderWithShadowElement}</Consumer>
-    );
+    return <Consumer>{this.renderWithShadowElement}</Consumer>;
   }
 }
 

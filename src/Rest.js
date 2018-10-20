@@ -10,12 +10,10 @@ class Rest extends Component {
     if (!isRestOpened) return null;
 
     return children(restItems);
-  }
+  };
 
   render() {
-    return (
-      <Consumer>{this.renderElements}</Consumer>
-    );
+    return <Consumer>{this.renderElements}</Consumer>;
   }
 }
 

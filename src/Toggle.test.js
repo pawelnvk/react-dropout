@@ -42,12 +42,13 @@ describe('Toggle', () => {
     const children = jest.fn(() => <div />);
     const instance = getWrapper({ children }).instance();
 
-    const Result = () => instance.renderToggle({
-      countToHide,
-      isRestOpened,
-      registerToggleRef,
-      toggleRest,
-    });
+    const Result = () =>
+      instance.renderToggle({
+        countToHide,
+        isRestOpened,
+        registerToggleRef,
+        toggleRest,
+      });
 
     const referred = shallow(<Result />).find(Referred);
     expect(referred.length).toEqual(1);
