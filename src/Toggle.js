@@ -17,15 +17,11 @@ class Toggle extends Component {
 
     const element = children({ isToggled: isRestOpened, toggle: toggleRest });
 
-    return (
-      <Referred attach={registerToggleRef}>{element}</Referred>
-    );
-  }
+    return <Referred attach={registerToggleRef}>{element}</Referred>;
+  };
 
   render() {
-    return (
-      <Consumer>{this.renderToggle}</Consumer>
-    );
+    return <Consumer>{this.renderToggle}</Consumer>;
   }
 }
 

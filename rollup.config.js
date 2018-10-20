@@ -24,24 +24,21 @@ const iifeFormat = {
 
 export default {
   input: 'src/index.js',
-  output: [
-    isProduction && esFormat,
-    isDevelopment && iifeFormat,
-  ].filter(x => x),
+  output: [isProduction && esFormat, isDevelopment && iifeFormat].filter(
+    x => x,
+  ),
   // All the used libs needs to be here
-  external: [
-    'react',
-    'prop-types',
-  ],
+  external: ['react', 'prop-types'],
   plugins: [
     eslint({
       throwOnError: isProduction,
       throwOnWarning: isProduction,
     }),
-    isDevelopment && serve({
-      contentBase: ['dist', 'demo', 'node_modules/@babel/standalone'],
-      historyApiFallback: true,
-    }),
+    isDevelopment &&
+      serve({
+        contentBase: ['dist', 'demo', 'node_modules/@babel/standalone'],
+        historyApiFallback: true,
+      }),
     isDevelopment && livereload({ watch: ['dist', 'demo'] }),
     resolve(),
     babel({

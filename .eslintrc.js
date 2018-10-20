@@ -1,5 +1,5 @@
 module.exports = {
-  extends: 'airbnb',
+  extends: ['airbnb', 'plugin:prettier/recommended'],
   globals: {
     beforeEach: true,
     describe: true,
@@ -7,12 +7,14 @@ module.exports = {
     expect: true,
     it: true,
     jest: true,
-    window: true
+    window: true,
   },
   parser: 'babel-eslint',
+  plugins: ['prettier'],
   rules: {
     'import/no-extraneous-dependencies': 0,
     'import/prefer-default-export': 0,
-    'react/jsx-filename-extension': 0
-  }
+    'prettier/prettier': 'error',
+    'react/jsx-filename-extension': 0,
+  },
 };

@@ -1,9 +1,4 @@
-import {
-  arrayOf,
-  node,
-  number,
-  shape,
-} from 'prop-types';
+import { arrayOf, node, number, shape } from 'prop-types';
 import React, { Component } from 'react';
 
 import { Provider } from './context';
@@ -14,26 +9,26 @@ import { Referred } from './Referred';
 import { getItemsIdsByGrades, hasIndex } from './utils';
 
 class Dropout extends Component {
-  static Rest = Rest
+  static Rest = Rest;
 
-  static Toggle = Toggle
+  static Toggle = Toggle;
 
-  static Wrapper = Wrapper
+  static Wrapper = Wrapper;
 
-  containerRef = {}
+  containerRef = {};
 
-  prevWindowWidth = window.innerWidth
+  prevWindowWidth = window.innerWidth;
 
-  shadowWrapperRef = {}
+  shadowWrapperRef = {};
 
   state = {
     countToHide: 0,
     isRestOpened: false,
-  }
+  };
 
-  toggleRef = {}
+  toggleRef = {};
 
-  wrapperRef = {}
+  wrapperRef = {};
 
   componentDidMount() {
     window.addEventListener('resize', this.handleResize);
@@ -44,7 +39,7 @@ class Dropout extends Component {
     window.removeEventListener('resize', this.handleResize);
   }
 
-  handleResize = (event) => {
+  handleResize = event => {
     const isTriggeredByEvent = !!event;
     const isShrinking = window.innerWidth < this.prevWindowWidth;
     this.prevWindowWidth = window.innerWidth;
@@ -54,34 +49,40 @@ class Dropout extends Component {
     } else {
       this.handleGrow();
     }
-  }
+  };
 
-  registerContainerRef = (ref) => {
+  registerContainerRef = ref => {
     this.containerRef = ref;
-  }
+  };
 
-  registerShadowWrapperRef = (ref) => {
+  registerShadowWrapperRef = ref => {
     this.shadowWrapperRef = ref;
-  }
+  };
 
-  registerToggleRef = (ref) => {
+  registerToggleRef = ref => {
     this.toggleRef = ref;
-  }
+  };
 
-  registerWrapperRef = (ref) => {
+  registerWrapperRef = ref => {
     this.wrapperRef = ref;
-  }
+  };
 
   toggleRest = () => {
     this.setState(({ isRestOpened }) => ({ isRestOpened: !isRestOpened }));
-  }
+  };
 
   decreaseCountToHide(callback) {
-    this.setState(({ countToHide }) => ({ countToHide: countToHide - 1 }), callback);
+    this.setState(
+      ({ countToHide }) => ({ countToHide: countToHide - 1 }),
+      callback,
+    );
   }
 
   increaseCountToHide(callback) {
-    this.setState(({ countToHide }) => ({ countToHide: countToHide + 1 }), callback);
+    this.setState(
+      ({ countToHide }) => ({ countToHide: countToHide + 1 }),
+      callback,
+    );
   }
 
   handleGrow() {
@@ -93,7 +94,8 @@ class Dropout extends Component {
 
     const { clientWidth } = this.toggleRef;
     const hasSpaceForLink = containerWidth > shadowWrapperWidth;
-    const hasSpaceForLinkWithoutToggle = containerWidth > shadowWrapperWidth - clientWidth;
+    const hasSpaceForLinkWithoutToggle =
+      containerWidth > shadowWrapperWidth - clientWidth;
     const isGroupHidden = countToHide > 1;
     const isOneHidden = countToHide === 1;
 
@@ -138,9 +140,7 @@ class Dropout extends Component {
           toggleRest: this.toggleRest,
         }}
       >
-        <Referred attach={this.registerContainerRef}>
-          {element}
-        </Referred>
+        <Referred attach={this.registerContainerRef}>{element}</Referred>
       </Provider>
     );
   }
@@ -148,9 +148,11 @@ class Dropout extends Component {
 
 Dropout.propTypes = {
   children: node.isRequired,
-  items: arrayOf(shape({
-    grade: number,
-  })),
+  items: arrayOf(
+    shape({
+      grade: number,
+    }),
+  ),
 };
 
 Dropout.defaultProps = {

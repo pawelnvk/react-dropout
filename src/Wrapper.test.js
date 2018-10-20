@@ -52,10 +52,9 @@ describe('Wrapper', () => {
 
       const Result = () => instance.renderWithShadowElement(renderProps);
 
-      const referred = shallow(<Result />).findWhere(mergeConditions(
-        wrapperHasNoProp('style'),
-        wrapperIsType(Referred),
-      ));
+      const referred = shallow(<Result />).findWhere(
+        mergeConditions(wrapperHasNoProp('style'), wrapperIsType(Referred)),
+      );
       expect(referred.length).toEqual(1);
       expect(referred.prop('attach')).toEqual(registerWrapperRef);
     });
@@ -80,11 +79,9 @@ describe('Wrapper', () => {
 
       const Result = () => instance.renderWithShadowElement(renderProps);
 
-
-      const referred = shallow(<Result />).findWhere(mergeConditions(
-        wrapperHasProp('style'),
-        wrapperIsType(Referred),
-      ));
+      const referred = shallow(<Result />).findWhere(
+        mergeConditions(wrapperHasProp('style'), wrapperIsType(Referred)),
+      );
       expect(referred.length).toEqual(1);
       expect(referred.prop('attach')).toEqual(registerShadowWrapperRef);
     });
