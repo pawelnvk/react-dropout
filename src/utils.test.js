@@ -1,17 +1,30 @@
 import {
+  extendProps,
+  getItemsData,
   getItemsIdsByGrades,
   hasIndex,
-  mergeConditions,
-  wrapperHasNoProp,
-  wrapperHasProp,
-  wrapperIsType,
 } from './utils';
 
-const Component = () => null;
+describe('extendProps', () => {
+  it('merges props objects', () => {
+    const firstProps = { test: 'item' };
+    const secondProps = { another: 'value' };
+    const expected = { another: 'value', test: 'item' };
 
-const getWrapper = () => ({
-  prop: jest.fn(),
-  type: jest.fn(),
+    const result = extendProps(firstProps)(secondProps);
+
+    expect(result).toEqual(expected);
+  });
+
+  it('treats first argument as prioritised', () => {
+    const firstProps = { test: 'item' };
+    const secondProps = { test: 'value' };
+    const expected = { test: 'item' };
+
+    const result = extendProps(firstProps)(secondProps);
+
+    expect(result).toEqual(expected);
+  });
 });
 
 describe('getItemsIdsByGrades', () => {
@@ -52,6 +65,60 @@ describe('getItemsIdsByGrades', () => {
   });
 });
 
+describe('getItemsData', () => {
+  it('returns hidden count', () => {
+    const countToHide = 2;
+    const items = [
+      { grade: 2 },
+      { grade: 5 },
+      { grade: 1 },
+      { grade: 7 },
+      { grade: 3 },
+    ];
+    const expected = expect.objectContaining({ countToHide });
+
+    const result = getItemsData(items, countToHide);
+
+    expect(result).toEqual(expected);
+  });
+
+  it('returns items that are in visible range', () => {
+    const countToHide = 2;
+    const items = [
+      { grade: 2 },
+      { grade: 5 },
+      { grade: 1 },
+      { grade: 7 },
+      { grade: 3 },
+    ];
+    const expected = expect.objectContaining({
+      items: [{ grade: 2 }, { grade: 1 }, { grade: 3 }],
+    });
+
+    const result = getItemsData(items, countToHide);
+
+    expect(result).toEqual(expected);
+  });
+
+  it('returns items that are out of visible range', () => {
+    const countToHide = 2;
+    const items = [
+      { grade: 2 },
+      { grade: 5 },
+      { grade: 1 },
+      { grade: 7 },
+      { grade: 3 },
+    ];
+    const expected = expect.objectContaining({
+      exceedingItems: [{ grade: 5 }, { grade: 7 }],
+    });
+
+    const result = getItemsData(items, countToHide);
+
+    expect(result).toEqual(expected);
+  });
+});
+
 describe('hasIndex', () => {
   it('returns true if index of item is included in provided list', () => {
     const ids = [2];
@@ -67,84 +134,6 @@ describe('hasIndex', () => {
     const item = [{}, 2];
 
     const result = hasIndex(ids)(...item);
-
-    expect(result).toBeFalsy();
-  });
-});
-
-describe('mergeConditions', () => {
-  const falsyFunc = jest.fn().mockImplementation(() => false);
-  const truthyFunc = jest.fn().mockImplementation(() => true);
-
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
-  it('succedes if each of passed functions is truthy', () => {
-    const funcs = [truthyFunc, truthyFunc];
-
-    const result = mergeConditions(...funcs)();
-
-    expect(result).toBeTruthy();
-  });
-
-  it('fails if any of passed functions is falsy', () => {
-    const funcs = [truthyFunc, falsyFunc];
-
-    const result = mergeConditions(...funcs)();
-
-    expect(result).toBeFalsy();
-  });
-
-  it('calls each passed function with passed value', () => {
-    const value = 'value';
-    const funcs = [truthyFunc, falsyFunc];
-
-    mergeConditions(...funcs)(value);
-
-    expect(truthyFunc).toHaveBeenCalledWith(value);
-    expect(falsyFunc).toHaveBeenCalledWith(value);
-  });
-});
-
-describe('wrapperHasNoProp', () => {
-  it('checks wrapper has no matching prop', () => {
-    const wrapper = getWrapper();
-    wrapper.prop.mockReturnValue(undefined);
-
-    const result = wrapperHasNoProp('prop')(wrapper);
-
-    expect(result).toBeTruthy();
-  });
-});
-
-describe('wrapperHasProp', () => {
-  it('checks wrapper has matching prop', () => {
-    const wrapper = getWrapper();
-    wrapper.prop.mockReturnValue(false);
-
-    const result = wrapperHasProp('prop')(wrapper);
-
-    expect(result).toBeTruthy();
-  });
-});
-
-describe('wrapperIsType', () => {
-  it('returns true if wrapper has matching type', () => {
-    const wrapper = getWrapper();
-    wrapper.type.mockReturnValue(Component);
-
-    const result = wrapperIsType(Component)(wrapper);
-
-    expect(result).toBeTruthy();
-  });
-
-  it('returns false if wrapper has not matching type', () => {
-    const OtherComponent = () => null;
-    const wrapper = getWrapper();
-    wrapper.type.mockReturnValue(OtherComponent);
-
-    const result = wrapperIsType(Component)(wrapper);
 
     expect(result).toBeFalsy();
   });

@@ -26,6 +26,11 @@ body {
   background-color: #ffffff;
   border-bottom: 1px solid #e0e0e0;
   display: flex;
+  left: 0;
+  position: fixed;
+  right: 0;
+  top: 0;
+  z-index: 10;
 }
 
 .header__container {

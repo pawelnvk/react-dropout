@@ -1,153 +1,126 @@
-import { arrayOf, node, number, shape } from 'prop-types';
-import React, { Component } from 'react';
+import { arrayOf, bool, func, number, shape } from 'prop-types';
+import React, { Fragment, PureComponent } from 'react';
 
-import { Provider } from './context';
-import { Rest } from './Rest';
-import { Toggle } from './Toggle';
-import { Wrapper } from './Wrapper';
-import { Referred } from './Referred';
-import { getItemsIdsByGrades, hasIndex } from './utils';
+import { extendProps, getItemsData } from './utils';
 
-class Dropout extends Component {
-  static Rest = Rest;
-
-  static Toggle = Toggle;
-
-  static Wrapper = Wrapper;
-
-  containerRef = {};
+class Dropout extends PureComponent {
+  state = {
+    countToHide: 0,
+  };
 
   prevWindowWidth = window.innerWidth;
 
-  shadowWrapperRef = {};
+  contentRef = null;
 
-  state = {
-    countToHide: 0,
-    isRestOpened: false,
-  };
+  rootRef = null;
 
-  toggleRef = {};
+  shadowContentRef = null;
 
-  wrapperRef = {};
+  shadowRootRef = null;
 
   componentDidMount() {
-    window.addEventListener('resize', this.handleResize);
     this.handleResize();
+    window.addEventListener('resize', this.handleResize);
   }
 
   componentWillUnmount() {
     window.removeEventListener('resize', this.handleResize);
   }
 
+  getRefFor = refName => node => {
+    this[refName] = node;
+  };
+
+  getContentProps = extendProps({ ref: this.getRefFor('contentRef') });
+
+  getRootProps = extendProps({ ref: this.getRefFor('rootRef') });
+
+  getShadowContentProps = extendProps({
+    ref: this.getRefFor('shadowContentRef'),
+  });
+
+  getShadowRootProps = extendProps({
+    ref: this.getShadowRootRef,
+    style: {
+      left: '-100%',
+      position: 'fixed',
+      top: '0px',
+      visibility: 'hidden',
+      width: '100%',
+    },
+  });
+
   handleResize = event => {
     const isTriggeredByEvent = !!event;
     const isShrinking = window.innerWidth < this.prevWindowWidth;
+
     this.prevWindowWidth = window.innerWidth;
 
-    if (!isTriggeredByEvent || isShrinking) {
+    if (!isTriggeredByEvent) {
+      this.handleShrink();
+      this.handleGrow();
+    } else if (isShrinking) {
       this.handleShrink();
     } else {
       this.handleGrow();
     }
   };
 
-  registerContainerRef = ref => {
-    this.containerRef = ref;
-  };
+  modifyCountToHide(callback, modificator = 1) {
+    const { _isCallbackBlocked } = this.props;
 
-  registerShadowWrapperRef = ref => {
-    this.shadowWrapperRef = ref;
-  };
-
-  registerToggleRef = ref => {
-    this.toggleRef = ref;
-  };
-
-  registerWrapperRef = ref => {
-    this.wrapperRef = ref;
-  };
-
-  toggleRest = () => {
-    this.setState(({ isRestOpened }) => ({ isRestOpened: !isRestOpened }));
-  };
-
-  decreaseCountToHide(callback) {
     this.setState(
-      ({ countToHide }) => ({ countToHide: countToHide - 1 }),
-      callback,
-    );
-  }
-
-  increaseCountToHide(callback) {
-    this.setState(
-      ({ countToHide }) => ({ countToHide: countToHide + 1 }),
-      callback,
+      ({ countToHide }) => ({ countToHide: countToHide + modificator }),
+      _isCallbackBlocked ? undefined : callback,
     );
   }
 
   handleGrow() {
     const { countToHide } = this.state;
-    const { clientWidth: containerWidth } = this.containerRef;
-    const { clientWidth: shadowWrapperWidth } = this.shadowWrapperRef;
+    const { clientWidth: rootWidth } = this.rootRef;
+    const { clientWidth: shadowContentWidth } = this.shadowContentRef;
+    const hasFreeSpace = rootWidth > shadowContentWidth;
 
-    if (!countToHide) return;
+    if (!countToHide || !hasFreeSpace) return;
 
-    const { clientWidth } = this.toggleRef;
-    const hasSpaceForLink = containerWidth > shadowWrapperWidth;
-    const hasSpaceForLinkWithoutToggle =
-      containerWidth > shadowWrapperWidth - clientWidth;
-    const isGroupHidden = countToHide > 1;
-    const isOneHidden = countToHide === 1;
-
-    const isMiddleTransition = isGroupHidden && hasSpaceForLink;
-    const isLastTransition = isOneHidden && hasSpaceForLinkWithoutToggle;
-
-    if (isMiddleTransition || isLastTransition) {
-      this.decreaseCountToHide(this.handleGrow);
-    }
+    this.modifyCountToHide(this.handleGrow, -1);
   }
 
   handleShrink() {
-    const { clientWidth: containerWidth } = this.containerRef;
-    const { clientWidth: wrapperWidth } = this.wrapperRef;
+    const { clientWidth: contentWidth } = this.contentRef;
+    const { clientWidth: rootWidth } = this.rootRef;
+    const hasExceedingContent = rootWidth <= contentWidth;
 
-    if (containerWidth <= wrapperWidth) {
-      this.increaseCountToHide(this.handleShrink);
-    }
+    if (!hasExceedingContent) return;
+
+    this.modifyCountToHide(this.handleShrink);
   }
 
   render() {
     const { children, items } = this.props;
-    const { countToHide, isRestOpened } = this.state;
-    const element = React.Children.only(children);
-    const rangeIndex = items.length - countToHide;
-    const idsByGrades = getItemsIdsByGrades(items);
-    const incrementedIds = idsByGrades.slice(0, rangeIndex + 1);
-    const ids = idsByGrades.slice(0, rangeIndex);
-    const restIds = idsByGrades.slice(rangeIndex);
+    const { countToHide } = this.state;
 
     return (
-      <Provider
-        value={{
-          countToHide,
-          incrementedItems: items.filter(hasIndex(incrementedIds)),
-          isRestOpened,
-          items: items.filter(hasIndex(ids)),
-          registerToggleRef: this.registerToggleRef,
-          registerShadowWrapperRef: this.registerShadowWrapperRef,
-          registerWrapperRef: this.registerWrapperRef,
-          restItems: items.filter(hasIndex(restIds)),
-          toggleRest: this.toggleRest,
-        }}
-      >
-        <Referred attach={this.registerContainerRef}>{element}</Referred>
-      </Provider>
+      <Fragment>
+        {children({
+          ...getItemsData(items, countToHide),
+          getContentProps: this.getContentProps,
+          getRootProps: this.getRootProps,
+        })}
+
+        {children({
+          ...getItemsData(items, countToHide - 1),
+          getContentProps: this.getShadowContentProps,
+          getRootProps: this.getShadowRootProps,
+        })}
+      </Fragment>
     );
   }
 }
 
 Dropout.propTypes = {
-  children: node.isRequired,
+  _isCallbackBlocked: bool,
+  children: func.isRequired,
   items: arrayOf(
     shape({
       grade: number,
@@ -156,6 +129,7 @@ Dropout.propTypes = {
 };
 
 Dropout.defaultProps = {
+  _isCallbackBlocked: false,
   items: [],
 };
 
