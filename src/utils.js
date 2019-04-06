@@ -1,3 +1,8 @@
+export const extendProps = initialProps => externalProps => ({
+  ...externalProps,
+  ...initialProps,
+});
+
 export const getItemsIdsByGrades = (items = []) =>
   Object.entries(items)
     .sort(
@@ -10,14 +15,15 @@ export const getItemsIdsByGrades = (items = []) =>
 
 export const hasIndex = ids => (value, index) => ids.indexOf(index) !== -1;
 
-export const mergeConditions = (...funcs) => value =>
-  funcs.reduce((acc, func) => acc && func(value), true);
+export const getItemsData = (items = [], countToHide = 0) => {
+  const rangeIndex = items.length - countToHide;
+  const idsByGrades = getItemsIdsByGrades(items);
+  const ids = idsByGrades.slice(0, rangeIndex);
+  const exceedingIds = idsByGrades.slice(rangeIndex);
 
-export const wrapperHasNoProp = propName => wrapper =>
-  typeof wrapper.prop(propName) === 'undefined';
-
-export const wrapperHasProp = propName => wrapper =>
-  typeof wrapper.prop(propName) !== 'undefined';
-
-export const wrapperIsType = Component => wrapper =>
-  wrapper.type() === Component;
+  return {
+    countToHide,
+    exceedingItems: items.filter(hasIndex(exceedingIds)),
+    items: items.filter(hasIndex(ids)),
+  };
+};

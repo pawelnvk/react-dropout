@@ -30,46 +30,71 @@ const navItems = [
   { page: 'Contact', path: '/contact' },
 ];
 
+class Toggle extends React.Component {
+  state = {
+    isToggled: false,
+  };
+
+  handleToggle = () => {
+    this.setState(({ isToggled }) => ({ isToggled: !isToggled }));
+  };
+
+  render() {
+    const { children } = this.props;
+    const { isToggled } = this.state;
+    return (
+      <li className="navigation__item navigation__item--toggle dropdown">
+        {isToggled && (
+          <button className="dropdown__overlay" onClick={this.handleToggle} />
+        )}
+        <button
+          className="navigation__link navigation__link--toggle dropdown__toggle"
+          onClick={this.handleToggle}
+        >
+          <Hamburger isActive={isToggled} />
+          {isToggled ? 'Less' : 'More'}
+        </button>
+
+        {isToggled && children}
+      </li>
+    );
+  }
+}
+
 const Nav = () => (
   <Dropout items={navItems}>
-    <nav className="navigation">
-      <Dropout.Wrapper>
-        {items => (
-          <ul className="navigation__list">
-            {items.map(({ page, path }) => (
-              <li className="navigation__item" key={path}>
-                <Link className="navigation__link" to={path}>
-                  {page}
-                </Link>
-              </li>
-            ))}
-            <Dropout.Toggle>
-              {({ isToggled, toggle }) => (
-                <li className="navigation__item navigation__item--toggle">
-                  <button className="navigation__link" onClick={toggle}>
-                    {isToggled ? 'Less' : 'More'}
-                  </button>
-
-                  <Dropout.Rest>
-                    {items => (
-                      <ul className="subnav">
-                        {items.map(({ page, path }) => (
-                          <li className="subnav__item" key={path}>
-                            <Link className="subnav__link" to={path}>
-                              {page}
-                            </Link>
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-                  </Dropout.Rest>
-                </li>
-              )}
-            </Dropout.Toggle>
-          </ul>
-        )}
-      </Dropout.Wrapper>
-    </nav>
+    {({
+      countToHide,
+      exceedingItems,
+      getContentProps,
+      getRootProps,
+      items,
+    }) => (
+      <nav {...getRootProps({ className: 'navigation' })}>
+        <ul {...getContentProps({ className: 'navigation__list' })}>
+          {items.map(({ page, path }) => (
+            <li className="navigation__item" key={path}>
+              <Link className="navigation__link" to={path}>
+                {page}
+              </Link>
+            </li>
+          ))}
+          {!!countToHide && (
+            <Toggle>
+              <ul className="subnav dropdown__content">
+                {exceedingItems.map(({ page, path }) => (
+                  <li className="subnav__item" key={path}>
+                    <Link className="subnav__link" to={path}>
+                      {page}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </Toggle>
+          )}
+        </ul>
+      </nav>
+    )}
   </Dropout>
 );
 ```
@@ -80,108 +105,16 @@ const Nav = () => (
 
 Container component that will be used to determine available width. It accepts following props:
 
-- `children` - DOM element that `ref` will be attached to, it's important for direct descendant to be DOM node
-- `items` - list of object to parse that will be available to display in `Dropout.Wrapper` and `Dropout.Rest`, items can be extended by `grade` property to indicate which of them should be hidden firstly lowest grade is the most important and it will be hidden last
+- `children` - child as a function passing `Droupout` render props
+- `items` - list of object to parse that will be available in render props, items can be extended by `grade` property to indicate which of them should be hidden firstly lowest grade is the most important and it will be hidden last
 
-Example:
+Render props:
+- `countToHide` - number of hidden elements
+- `exceedingItems` - items that are exceeding current container
+- `getContentProps` - props that should be attached to content
+- `getRootProps` - props that should be attached to root
+- `items` - items currently visible
 
-```jsx
-const items = [
-  { exact: true, page: 'Home', path: '/' },
-  { page: 'About', path: '/about' },
-  { page: 'Products', path: '/products' },
-  { page: 'Service', path: '/service' },
-  { page: 'Articles', path: '/articles' },
-  { page: 'Contact', path: '/contact' },
-];
+## Contributing
 
-const Nav = () => (
-  <Dropout items={items}>
-    <nav className="navigation">{/* code */}</nav>
-  </Dropout>
-);
-```
-
-### `Dropout.Wrapper`
-
-Main items container that will be displaying content fitting in `Dropout` child. It accepts following props:
-
-- `children` - children as a function called with render props, direct descendant should be DOM node, to this node ref will be attached
-
-Available render props:
-
-- `items` - items fitting in available space, filtered from provided items
-
-Example:
-
-```jsx
-<Dropout.Wrapper>
-  {items => (
-    <ul className="navigation__list">
-      {items.map(({ page, path }) => (
-        <li className="navigation__item" key={path}>
-          <Link className="navigation__link" to={path}>
-            {page}
-          </Link>
-        </li>
-      ))}
-      {/* code */}
-    </ul>
-  )}
-</Dropout.Wrapper>
-```
-
-### `Dropout.Toggle`
-
-Holder of toggle button. It should be placed inside `Dropout.Wrapper`. It accepts following props:
-
-- `children` - children as a function called with render props, direct descendant should be DOM node, to this node ref will be attached
-
-Available render props:
-
-- `isRestOpened` - state of `Dropout.Rest` element, ahowing if it's opened
-- `toggleRest` - function called to switch between opened and closed state
-
-Example:
-
-```jsx
-<Dropout.Toggle>
-  {({ isToggled, toggle }) => (
-    <li className="navigation__item navigation__item--toggle">
-      <button className="navigation__link" onClick={toggle}>
-        {isToggled ? 'Less' : 'More'}
-      </button>
-
-      {/* code */}
-    </li>
-  )}
-</Dropout.Toggle>
-```
-
-### `Dropout.Rest`
-
-Container of elements that aren't fitting in `Dropout.Wrapper`. It accepts following props:
-
-- `children` - children as a function called with render props, direct descendant should be DOM node, to this node ref will be attached
-
-Available render props:
-
-- `items` - items that aren't fitting in available space, filtered from provided items
-
-Example:
-
-```jsx
-<Dropout.Rest>
-  {items => (
-    <ul className="subnav">
-      {items.map(({ page, path }) => (
-        <li className="subnav__item" key={path}>
-          <Link className="subnav__link" to={path}>
-            {page}
-          </Link>
-        </li>
-      ))}
-    </ul>
-  )}
-</Dropout.Rest>
-```
+If you want to contribute, please read [contribution guide](CONTRIBUTING.md)
