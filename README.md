@@ -101,9 +101,7 @@ const Nav = () => (
 
 ## API
 
-### `Dropout`
-
-Container component that will be used to determine available width. It accepts following props:
+Component accepts following props:
 
 - `children` - child as a function passing `Droupout` render props
 - `items` - list of object to parse that will be available in render props, items can be extended by `grade` property to indicate which of them should be hidden firstly lowest grade is the most important and it will be hidden last
