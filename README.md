@@ -99,6 +99,10 @@ const Nav = () => (
 );
 ```
 
+## Example
+
+To see example implementation preview [this](https://codesandbox.io/s/wyj7mnz897)
+
 ## API
 
 Component accepts following props:
