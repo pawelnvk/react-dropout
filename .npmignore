@@ -9,7 +9,7 @@ pids
 *.seed
 *.pid.lock
 
-.circleci
+.github
 coverage
 demo
 node_modules

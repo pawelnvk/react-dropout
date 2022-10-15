@@ -1,0 +1,20 @@
+name: PR checks
+on: [pull_request]
+jobs:
+  PR-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: 'yarn'
+      - run:
+          name: Setup Code Climate test-reporter
+          command: |
+            curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+            chmod +x ./cc-test-reporter
+      - run: yarn install --frozen-lockfile
+      - run: ./cc-test-reporter before-build
+      - run: yarn test:ci
+      - run: ./cc-test-reporter after-build --exit-code $?
