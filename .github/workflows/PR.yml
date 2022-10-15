@@ -9,9 +9,7 @@ jobs:
         with:
           node-version: 16
           cache: 'yarn'
-      - run:
-          name: Setup Code Climate test-reporter
-          command: |
+      - run: |
             curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
             chmod +x ./cc-test-reporter
       - run: yarn install --frozen-lockfile
