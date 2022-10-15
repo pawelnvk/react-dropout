@@ -2,8 +2,9 @@
 
 [![NPM version](https://img.shields.io/npm/v/react-dropout.svg)](https://www.npmjs.com/package/react-dropout)
 [![NPM downloads](https://img.shields.io/npm/dm/react-dropout.svg)](https://www.npmjs.com/package/react-dropout)
-[![Maintainability](https://api.codeclimate.com/v1/badges/886513e64fc6fbc107a7/maintainability)](https://codeclimate.com/github/pawelnvk/react-dropout/maintainability)
-[![Test Coverage](https://api.codeclimate.com/v1/badges/886513e64fc6fbc107a7/test_coverage)](https://codeclimate.com/github/pawelnvk/react-dropout/test_coverage)
+[![Maintainability](https://api.codeclimate.com/v1/badges/886513e64fc6fbc107a7/maintainability)](https://codeclimate.com/github/pawelnvk/react-dropout)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/886513e64fc6fbc107a7/test_coverage)](https://codeclimate.com/github/pawelnvk/react-dropout)
+[![GitHub Actions](https://github.com/pawelnvk/react-dropout/actions/workflows/PR.yml/badge.svg)](https://github.com/pawelnvk/react-dropout/actions)
 
 Easy way of managing navigation in react-based apps.
 
