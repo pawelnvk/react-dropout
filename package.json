@@ -61,7 +61,7 @@
     "build": "ENVIRONMENT=production rollup -c",
     "clean": "rimraf dist",
     "lint": "yarn eslint src",
-    "prepublish": "yarn clean && yarn lint && yarn test:unit:ci && yarn test:e2e && yarn build",
+    "prepublishOnly": "yarn clean && yarn lint && yarn test:unit:ci && yarn test:e2e && yarn build",
     "start": "ENVIRONMENT=development rollup -c --watch",
     "start:test": "ENVIRONMENT=testing rollup -c --watch",
     "test:unit": "jest --env=jsdom --watch",
