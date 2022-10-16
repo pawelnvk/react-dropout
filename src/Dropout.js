@@ -1,4 +1,4 @@
-import { arrayOf, bool, func, number, shape } from 'prop-types';
+import { arrayOf, func, number, shape } from 'prop-types';
 import React, { Fragment, PureComponent } from 'react';
 
 import { extendProps, getItemsData } from './utils';
@@ -67,11 +67,9 @@ class Dropout extends PureComponent {
   };
 
   modifyCountToHide(callback, modificator = 1) {
-    const { _isCallbackBlocked } = this.props;
-
     this.setState(
       ({ countToHide }) => ({ countToHide: countToHide + modificator }),
-      _isCallbackBlocked ? undefined : callback,
+      callback,
     );
   }
 
@@ -119,7 +117,6 @@ class Dropout extends PureComponent {
 }
 
 Dropout.propTypes = {
-  _isCallbackBlocked: bool,
   children: func.isRequired,
   items: arrayOf(
     shape({
@@ -129,7 +126,6 @@ Dropout.propTypes = {
 };
 
 Dropout.defaultProps = {
-  _isCallbackBlocked: false,
   items: [],
 };
 
