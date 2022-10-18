@@ -8,6 +8,7 @@ test('Dropout adjusts amount of elements visible on the screen based on viewport
   // TODO: Figure out solution for implementational problem with two visible navigations
   const navigationLocator = page.getByTestId('navigation').first();
 
+  console.log(1, await navigationLocator.innerHTML());
   await Promise.all(
     [
       'Home',
@@ -34,6 +35,7 @@ test('Dropout adjusts amount of elements visible on the screen based on viewport
 
   await page.setViewportSize({ height: 1080, width: 1920 });
   await page.goto('/');
+  console.log(2, await navigationLocator.innerHTML());
 
   await Promise.all(
     [
@@ -64,6 +66,7 @@ test('Dropout adjusts amount of elements visible on the screen based on viewport
 
   await navigationLocator.getByText('More').click();
 
+  console.log(3, await navigationLocator.innerHTML());
   await Promise.all(
     [
       'History',
