@@ -3,39 +3,32 @@ import { test, expect, devices } from '@playwright/test';
 test('Dropout adjusts amount of elements visible on the screen based on viewport size', async ({
   page,
 }) => {
+  await page.setViewportSize(devices['iPad (gen 6)'].viewport);
+  await page.goto('/');
+  // TODO: Fix the issue with initial load of more button even though it's not required in 980 width
   await page.goto('/');
 
   // TODO: Figure out solution for implementational problem with two visible navigations
   const navigationLocator = page.getByTestId('navigation').first();
 
-  console.log(1, await navigationLocator.innerHTML());
   await Promise.all(
-    [
-      'Home',
-      'About',
-      'History',
-      'Career',
-      'Blog',
-      'Help',
-      'FAQ',
-      'Products',
-      'Service',
-    ].map(item => expect(navigationLocator.getByText(item)).toBeVisible()),
+    ['Home', 'About', 'History', 'Career', 'Blog', 'Help', 'FAQ'].map(item =>
+      expect(navigationLocator.getByText(item)).toBeVisible(),
+    ),
   );
 
   await navigationLocator.getByText('More').click();
 
   await Promise.all(
-    ['Articles', 'Contact'].map(item =>
+    ['Products', 'Service', 'Articles', 'Contact'].map(item =>
       expect(navigationLocator.getByText(item)).toBeVisible(),
     ),
   );
 
   await navigationLocator.getByText('Less').click();
 
-  await page.setViewportSize({ height: 1080, width: 1920 });
+  await page.setViewportSize({ width: 1920, height: 1080 });
   await page.goto('/');
-  console.log(2, await navigationLocator.innerHTML());
 
   await Promise.all(
     [
@@ -66,7 +59,6 @@ test('Dropout adjusts amount of elements visible on the screen based on viewport
 
   await navigationLocator.getByText('More').click();
 
-  console.log(3, await navigationLocator.innerHTML());
   await Promise.all(
     [
       'History',
