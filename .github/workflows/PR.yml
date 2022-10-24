@@ -13,8 +13,23 @@ jobs:
             curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
             chmod +x ./cc-test-reporter
       - run: yarn install --frozen-lockfile
-      - run: ./cc-test-reporter before-build
-      - run: yarn test:ci
-      - run: ./cc-test-reporter after-build --exit-code $?
+      - name: Prepare test reporter
+        run: ./cc-test-reporter before-build
+      - name: Run unit tests
+        run: yarn test:unit:ci
+      - name: Push code coverage
+        run: ./cc-test-reporter after-build --exit-code $?
         env:
           CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+      - name: Install Playwright Browsers
+        run: yarn playwright install --with-deps
+      - name: Run Playwright tests
+        run: yarn test:e2e
+      - uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: eports
+          path: | 
+            playwright-report/
+            test-results/
+          retention-days: 10

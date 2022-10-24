@@ -27,3 +27,6 @@ typings
 .Trashes
 ehthumbs.db
 Thumbs.db
+/test-results/
+/playwright-report/
+/playwright/.cache/

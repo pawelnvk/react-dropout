@@ -149,7 +149,7 @@ body {
 .page::before {
   background-color: rgba(0, 0, 0, 0.3);
   bottom: 0;
-  content: ';
+  content: '';
   left: 0;
   position: absolute;
   right: 0;
@@ -188,7 +188,7 @@ body {
 
 .u-container {
   margin: auto;
-  max-width: 980px;
+  max-width: 1040px;
   padding: 0 10px;
   width: 100%;
 }

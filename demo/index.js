@@ -72,7 +72,7 @@ const Nav = () => (
       getRootProps,
       items,
     }) => (
-      <nav {...getRootProps({ className: 'navigation' })}>
+      <nav {...getRootProps({ className: 'navigation', 'data-testid': 'navigation' })}>
         <ul {...getContentProps({ className: 'navigation__list' })}>
           {items.map(({ page, path }) => (
             <li className="navigation__item" key={path}>

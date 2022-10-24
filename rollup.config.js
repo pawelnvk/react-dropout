@@ -8,6 +8,8 @@ const { ENVIRONMENT } = process.env;
 
 const isDevelopment = ENVIRONMENT === 'development';
 const isProduction = ENVIRONMENT === 'production';
+const isTesting = ENVIRONMENT === 'testing';
+const isDevelopmentOrTesting = isDevelopment || isTesting;
 const esFormat = {
   file: 'dist/Dropout.js',
   format: 'es',
@@ -24,9 +26,10 @@ const iifeFormat = {
 
 export default {
   input: 'src/index.js',
-  output: [isProduction && esFormat, isDevelopment && iifeFormat].filter(
-    x => x,
-  ),
+  output: [
+    isProduction && esFormat,
+    isDevelopmentOrTesting && iifeFormat,
+  ].filter(x => x),
   // All the used libs needs to be here
   external: ['react', 'prop-types'],
   plugins: [
@@ -34,15 +37,14 @@ export default {
       throwOnError: isProduction,
       throwOnWarning: isProduction,
     }),
-    isDevelopment &&
+    isDevelopmentOrTesting &&
       serve({
         contentBase: ['dist', 'demo', 'node_modules/@babel/standalone'],
         historyApiFallback: true,
+        port: 3000,
       }),
     isDevelopment && livereload({ watch: ['dist', 'demo'] }),
     resolve(),
-    babel({
-      exclude: 'node_modules/**',
-    }),
+    babel({ exclude: 'node_modules/**' }),
   ].filter(x => x),
 };
