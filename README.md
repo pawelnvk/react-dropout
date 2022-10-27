@@ -24,42 +24,54 @@ yarn add react-dropout
 const navItems = [
   { exact: true, page: 'Home', path: '/' },
   { page: 'About', path: '/about' },
+  { page: 'History', path: '/history' },
+  { page: 'Career', path: '/career' },
+  { page: 'Blog', path: '/blog' },
+  { page: 'Help', path: '/help' },
+  { page: 'FAQ', path: '/faq' },
   { page: 'Products', path: '/products' },
   { page: 'Service', path: '/service' },
   { page: 'Articles', path: '/articles' },
   { page: 'Contact', path: '/contact' },
 ];
 
-class Toggle extends React.Component {
-  state = {
-    isToggled: false,
-  };
+const Hamburger = ({ isActive }) => (
+  <div className={`hamburger ${isActive ? 'is-active' : ''}`}>
+    <span className="hamburger__line hamburger__line--1" />
+    <span className="hamburger__line hamburger__line--2" />
+    <span className="hamburger__line hamburger__line--3" />
+  </div>
+);
 
-  handleToggle = () => {
-    this.setState(({ isToggled }) => ({ isToggled: !isToggled }));
-  };
+const Logo = () => (
+  <div className="logo">
+    <Link className="logo__link" to="/">
+      Logo
+    </Link>
+  </div>
+);
 
-  render() {
-    const { children } = this.props;
-    const { isToggled } = this.state;
-    return (
-      <li className="navigation__item navigation__item--toggle dropdown">
-        {isToggled && (
-          <button className="dropdown__overlay" onClick={this.handleToggle} />
-        )}
-        <button
-          className="navigation__link navigation__link--toggle dropdown__toggle"
-          onClick={this.handleToggle}
-        >
-          <Hamburger isActive={isToggled} />
-          {isToggled ? 'Less' : 'More'}
-        </button>
+const Toggle = ({ children }) => {
+  const [isToggled, setIsToggled] = React.useState(false);
+  const handleToggle = () => setIsToggled((prevIsToggled) => !prevIsToggled);
 
-        {isToggled && children}
-      </li>
-    );
-  }
-}
+  return (
+    <li className="navigation__item navigation__item--toggle dropdown">
+      {isToggled && (
+        <button className="dropdown__overlay" onClick={handleToggle} />
+      )}
+      <button
+        className="navigation__link navigation__link--toggle dropdown__toggle"
+        onClick={handleToggle}
+      >
+        <Hamburger isActive={isToggled} />
+        {isToggled ? 'Less' : 'More'}
+      </button>
+
+      {isToggled && children}
+    </li>
+  );
+};
 
 const Nav = () => (
   <Dropout items={navItems}>
@@ -70,7 +82,12 @@ const Nav = () => (
       getRootProps,
       items,
     }) => (
-      <nav {...getRootProps({ className: 'navigation' })}>
+      <nav
+        {...getRootProps({
+          className: 'navigation',
+          'data-testid': 'navigation',
+        })}
+      >
         <ul {...getContentProps({ className: 'navigation__list' })}>
           {items.map(({ page, path }) => (
             <li className="navigation__item" key={path}>
@@ -111,6 +128,7 @@ Component accepts following props:
 - `items` - list of object to parse that will be available in render props, items can be extended by `grade` property to indicate which of them should be hidden firstly lowest grade is the most important and it will be hidden last
 
 Render props:
+
 - `countToHide` - number of hidden elements
 - `exceedingItems` - items that are exceeding current container
 - `getContentProps` - props that should be attached to content
