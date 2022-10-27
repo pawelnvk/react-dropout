@@ -1,4 +1,4 @@
-export const extendProps = initialProps => externalProps => ({
+export const extendProps = (initialProps) => (externalProps) => ({
   ...externalProps,
   ...initialProps,
 });
@@ -13,7 +13,7 @@ export const getItemsIdsByGrades = (items = []) =>
     )
     .map(([id]) => Number(id));
 
-export const hasIndex = ids => (value, index) => ids.indexOf(index) !== -1;
+export const hasIndex = (ids) => (_, index) => ids.indexOf(index) !== -1;
 
 export const getItemsData = (items = [], countToHide = 0) => {
   const rangeIndex = items.length - countToHide;

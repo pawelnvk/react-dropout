@@ -1,7 +1,7 @@
-import babel from 'rollup-plugin-babel';
-import { eslint } from 'rollup-plugin-eslint';
+import babel from '@rollup/plugin-babel';
+import eslint from '@rollup/plugin-eslint';
 import livereload from 'rollup-plugin-livereload';
-import resolve from 'rollup-plugin-node-resolve';
+import { nodeResolve } from '@rollup/plugin-node-resolve';
 import serve from 'rollup-plugin-serve';
 
 const { ENVIRONMENT } = process.env;
@@ -29,7 +29,7 @@ export default {
   output: [
     isProduction && esFormat,
     isDevelopmentOrTesting && iifeFormat,
-  ].filter(x => x),
+  ].filter((x) => x),
   // All the used libs needs to be here
   external: ['react', 'prop-types'],
   plugins: [
@@ -44,7 +44,7 @@ export default {
         port: 3000,
       }),
     isDevelopment && livereload({ watch: ['dist', 'demo'] }),
-    resolve(),
-    babel({ exclude: 'node_modules/**' }),
-  ].filter(x => x),
+    nodeResolve(),
+    babel({ babelHelpers: 'runtime', exclude: 'node_modules/**' }),
+  ].filter((x) => x),
 };

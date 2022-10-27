@@ -32,36 +32,27 @@ const Logo = () => (
   </div>
 );
 
-class Toggle extends React.Component {
-  state = {
-    isToggled: false,
-  };
+const Toggle = ({ children }) => {
+  const [isToggled, setIsToggled] = React.useState(false);
+  const handleToggle = () => setIsToggled(prevIsToggled => !prevIsToggled);
 
-  handleToggle = () => {
-    this.setState(({ isToggled }) => ({ isToggled: !isToggled }));
-  };
+  return (
+    <li className="navigation__item navigation__item--toggle dropdown">
+      {isToggled && (
+        <button className="dropdown__overlay" onClick={handleToggle} />
+      )}
+      <button
+        className="navigation__link navigation__link--toggle dropdown__toggle"
+        onClick={handleToggle}
+      >
+        <Hamburger isActive={isToggled} />
+        {isToggled ? 'Less' : 'More'}
+      </button>
 
-  render() {
-    const { children } = this.props;
-    const { isToggled } = this.state;
-    return (
-      <li className="navigation__item navigation__item--toggle dropdown">
-        {isToggled && (
-          <button className="dropdown__overlay" onClick={this.handleToggle} />
-        )}
-        <button
-          className="navigation__link navigation__link--toggle dropdown__toggle"
-          onClick={this.handleToggle}
-        >
-          <Hamburger isActive={isToggled} />
-          {isToggled ? 'Less' : 'More'}
-        </button>
-
-        {isToggled && children}
-      </li>
-    );
-  }
-}
+      {isToggled && children}
+    </li>
+  );
+};
 
 const Nav = () => (
   <Dropout items={navItems}>
@@ -72,7 +63,12 @@ const Nav = () => (
       getRootProps,
       items,
     }) => (
-      <nav {...getRootProps({ className: 'navigation', 'data-testid': 'navigation' })}>
+      <nav
+        {...getRootProps({
+          className: 'navigation',
+          'data-testid': 'navigation',
+        })}
+      >
         <ul {...getContentProps({ className: 'navigation__list' })}>
           {items.map(({ page, path }) => (
             <li className="navigation__item" key={path}>
