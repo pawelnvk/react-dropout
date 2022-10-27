@@ -1,1 +1,3 @@
-export { Dropout as default } from './Dropout';
+import { Dropout } from './Dropout';
+
+export default Dropout;

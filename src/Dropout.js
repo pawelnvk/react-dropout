@@ -1,120 +1,80 @@
 import { arrayOf, func, number, shape } from 'prop-types';
-import React, { Fragment, PureComponent } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 
 import { extendProps, getItemsData } from './utils';
 
-class Dropout extends PureComponent {
-  state = {
-    countToHide: 0,
-  };
+const INITIAL_COUNT_TO_HIDE = 0;
 
-  prevWindowWidth = window.innerWidth;
+const Dropout = ({ children, items }) => {
+  const [countToHide, setCountToHide] = useState(INITIAL_COUNT_TO_HIDE);
+  const contentRef = useRef(null);
+  const rootRef = useRef(null);
+  const shadowContentRef = useRef(null);
+  const modifyCountToHide = useCallback(() => {
+    const hasFreeSpace =
+      shadowContentRef.current.clientWidth !== contentRef.current.clientWidth &&
+      rootRef.current.clientWidth > shadowContentRef.current.clientWidth;
+    const hasExceedingContent =
+      rootRef.current.clientWidth <= contentRef.current.clientWidth;
 
-  contentRef = null;
-
-  rootRef = null;
-
-  shadowContentRef = null;
-
-  shadowRootRef = null;
-
-  componentDidMount() {
-    this.handleResize();
-    window.addEventListener('resize', this.handleResize);
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener('resize', this.handleResize);
-  }
-
-  getRefFor = refName => node => {
-    this[refName] = node;
-  };
-
-  getContentProps = extendProps({ ref: this.getRefFor('contentRef') });
-
-  getRootProps = extendProps({ ref: this.getRefFor('rootRef') });
-
-  getShadowContentProps = extendProps({
-    ref: this.getRefFor('shadowContentRef'),
-  });
-
-  getShadowRootProps = extendProps({
-    ref: this.getShadowRootRef,
-    style: {
-      left: '-100%',
-      position: 'fixed',
-      top: '0px',
-      visibility: 'hidden',
-      width: '100%',
-    },
-  });
-
-  handleResize = event => {
-    const isTriggeredByEvent = !!event;
-    const isShrinking = window.innerWidth < this.prevWindowWidth;
-
-    this.prevWindowWidth = window.innerWidth;
-
-    if (!isTriggeredByEvent) {
-      this.handleShrink();
-      this.handleGrow();
-    } else if (isShrinking) {
-      this.handleShrink();
-    } else {
-      this.handleGrow();
+    if (hasFreeSpace) {
+      setCountToHide((prevCountToHide) => prevCountToHide - 1);
+    } else if (hasExceedingContent) {
+      setCountToHide((prevCountToHide) => prevCountToHide + 1);
     }
-  };
+  }, []);
+  const propsGetter = useMemo(
+    () => ({
+      content: extendProps({ ref: contentRef }),
+      root: extendProps({ ref: rootRef }),
+      shadowContent: extendProps({ ref: shadowContentRef }),
+      shadowRoot: extendProps({
+        style: {
+          left: '-100%',
+          position: 'fixed',
+          top: '0px',
+          visibility: 'hidden',
+          width: '100%',
+        },
+      }),
+    }),
+    [],
+  );
 
-  modifyCountToHide(callback, modificator = 1) {
-    this.setState(
-      ({ countToHide }) => ({ countToHide: countToHide + modificator }),
-      callback,
-    );
-  }
+  useEffect(() => {
+    modifyCountToHide();
+  }, [countToHide, items, modifyCountToHide]);
 
-  handleGrow() {
-    const { countToHide } = this.state;
-    const { clientWidth: rootWidth } = this.rootRef;
-    const { clientWidth: shadowContentWidth } = this.shadowContentRef;
-    const hasFreeSpace = rootWidth > shadowContentWidth;
+  useEffect(() => {
+    window.addEventListener('resize', modifyCountToHide);
 
-    if (!countToHide || !hasFreeSpace) return;
+    return () => {
+      window.removeEventListener('resize', modifyCountToHide);
+    };
+  }, [modifyCountToHide]);
 
-    this.modifyCountToHide(this.handleGrow, -1);
-  }
+  return (
+    <>
+      {children({
+        ...getItemsData(items, countToHide),
+        getContentProps: propsGetter.content,
+        getRootProps: propsGetter.root,
+      })}
 
-  handleShrink() {
-    const { clientWidth: contentWidth } = this.contentRef;
-    const { clientWidth: rootWidth } = this.rootRef;
-    const hasExceedingContent = rootWidth <= contentWidth;
-
-    if (!hasExceedingContent) return;
-
-    this.modifyCountToHide(this.handleShrink);
-  }
-
-  render() {
-    const { children, items } = this.props;
-    const { countToHide } = this.state;
-
-    return (
-      <Fragment>
-        {children({
-          ...getItemsData(items, countToHide),
-          getContentProps: this.getContentProps,
-          getRootProps: this.getRootProps,
-        })}
-
-        {children({
-          ...getItemsData(items, countToHide - 1),
-          getContentProps: this.getShadowContentProps,
-          getRootProps: this.getShadowRootProps,
-        })}
-      </Fragment>
-    );
-  }
-}
+      {children({
+        ...getItemsData(items, countToHide - 1),
+        getContentProps: propsGetter.shadowContent,
+        getRootProps: propsGetter.shadowRoot,
+      })}
+    </>
+  );
+};
 
 Dropout.propTypes = {
   children: func.isRequired,

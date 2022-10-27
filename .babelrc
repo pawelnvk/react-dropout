@@ -1,15 +1,9 @@
 {
-  "presets": [
-    "react",
-    "stage-0"
-  ],
+  "plugins": ["@babel/plugin-transform-runtime"],
+  "presets": ["@babel/react"],
   "env": {
     "test": {
-      "presets": [
-        "env",
-        "react",
-        "stage-0"
-      ]
+      "presets": ["@babel/env", "@babel/react"]
     }
   }
 }
