@@ -52,10 +52,13 @@ const Dropout = ({ children, items }) => {
   }, [countToHide, items, modifyCountToHide]);
 
   useEffect(() => {
-    window.addEventListener('resize', modifyCountToHide);
+    const resizeObserver = new window.ResizeObserver(modifyCountToHide);
+    const ref = rootRef.current;
+
+    resizeObserver.observe(ref);
 
     return () => {
-      window.removeEventListener('resize', modifyCountToHide);
+      resizeObserver.unobserve(ref);
     };
   }, [modifyCountToHide]);
 
