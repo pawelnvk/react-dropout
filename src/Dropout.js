@@ -24,9 +24,9 @@ const Dropout = ({ children, items }) => {
       rootRef.current.clientWidth <= contentRef.current.clientWidth;
 
     if (hasFreeSpace) {
-      setCountToHide((prevCountToHide) => prevCountToHide - 1);
+      setCountToHide((previousCountToHide) => previousCountToHide - 1);
     } else if (hasExceedingContent) {
-      setCountToHide((prevCountToHide) => prevCountToHide + 1);
+      setCountToHide((previousCountToHide) => previousCountToHide + 1);
     }
   }, []);
   const propsGetter = useMemo(
@@ -47,16 +47,14 @@ const Dropout = ({ children, items }) => {
     [],
   );
 
+  useEffect(modifyCountToHide, [countToHide, items, modifyCountToHide]);
   useEffect(() => {
-    modifyCountToHide();
-  }, [countToHide, items, modifyCountToHide]);
+    const resizeObserver = new window.ResizeObserver(modifyCountToHide);
+    const ref = rootRef.current;
 
-  useEffect(() => {
-    window.addEventListener('resize', modifyCountToHide);
+    resizeObserver.observe(ref);
 
-    return () => {
-      window.removeEventListener('resize', modifyCountToHide);
-    };
+    return () => resizeObserver.unobserve(ref);
   }, [modifyCountToHide]);
 
   return (
@@ -68,7 +66,7 @@ const Dropout = ({ children, items }) => {
       })}
 
       {children({
-        ...getItemsData(items, countToHide - 1),
+        ...getItemsData(items, Math.max(countToHide - 1, 0)),
         getContentProps: propsGetter.shadowContent,
         getRootProps: propsGetter.shadowRoot,
       })}
