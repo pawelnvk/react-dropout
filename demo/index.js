@@ -2,7 +2,7 @@ const { BrowserRouter: Router, Link, Route, Switch } = ReactRouterDOM;
 
 const root = document.querySelector('#root');
 
-const navItems = [
+const initialNavItems = [
   { exact: true, page: 'Home', path: '/' },
   { page: 'About', path: '/about' },
   { page: 'History', path: '/history' },
@@ -34,7 +34,7 @@ const Logo = () => (
 
 const Toggle = ({ children }) => {
   const [isToggled, setIsToggled] = React.useState(false);
-  const handleToggle = () => setIsToggled(prevIsToggled => !prevIsToggled);
+  const handleToggle = () => setIsToggled((prevIsToggled) => !prevIsToggled);
 
   return (
     <li className="navigation__item navigation__item--toggle dropdown">
@@ -54,7 +54,7 @@ const Toggle = ({ children }) => {
   );
 };
 
-const Nav = () => (
+const Nav = ({ navItems }) => (
   <Dropout items={navItems}>
     {({
       countToHide,
@@ -96,34 +96,68 @@ const Nav = () => (
   </Dropout>
 );
 
-const App = () => (
-  <Router>
-    <div className="app">
-      <header className="app__header app__header--lower header">
-        <div className="header__container u-container">
-          <Logo />
+const App = () => {
+  const [navItems, setNavItems] = React.useState(initialNavItems);
 
-          <Nav />
-        </div>
-      </header>
-      <main className="app__main">
-        <Switch>
-          {navItems.map(({ exact, page, path }) => (
-            <Route
-              exact={exact}
-              key={path}
-              path={path}
-              render={() => (
-                <div className={`page page--${page.toLowerCase()}`}>
-                  <div className="page__content">{page}</div>
-                </div>
-              )}
-            />
-          ))}
-        </Switch>
-      </main>
-    </div>
-  </Router>
-);
+  return (
+    <Router>
+      <div className="app">
+        <header className="app__header app__header--lower header">
+          <div className="header__container u-container">
+            <Logo />
+
+            <Nav navItems={navItems} />
+          </div>
+        </header>
+        <main className="app__main">
+          <Switch>
+            {navItems.map(({ exact, page, path }) => (
+              <Route
+                exact={exact}
+                key={path}
+                path={path}
+                render={() => (
+                  <div className={`page page--${page.toLocaleLowerCase()}`}>
+                    <div className="page__content">
+                      <h1 className="page__title">{page}</h1>
+                      <div className="page__button-wrapper">
+                        <button
+                          className="page__button button"
+                          onClick={() =>
+                            setNavItems((prevNavItems) => [
+                              ...prevNavItems,
+                              {
+                                page: `Item-${+new Date()}`,
+                                path: `/item-${+new Date()}`,
+                              },
+                            ])
+                          }
+                        >
+                          + Add item
+                        </button>
+                        <button
+                          className="page__button button"
+                          onClick={() =>
+                            setNavItems((prevNavItems) =>
+                              prevNavItems.filter(
+                                (_, index, array) => index !== array.length - 1,
+                              ),
+                            )
+                          }
+                        >
+                          - Remove item
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              />
+            ))}
+          </Switch>
+        </main>
+      </div>
+    </Router>
+  );
+};
 
 ReactDOM.render(<App />, root);

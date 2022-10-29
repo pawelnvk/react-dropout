@@ -47,19 +47,14 @@ const Dropout = ({ children, items }) => {
     [],
   );
 
-  useEffect(() => {
-    modifyCountToHide();
-  }, [countToHide, items, modifyCountToHide]);
-
+  useEffect(modifyCountToHide, [countToHide, items, modifyCountToHide]);
   useEffect(() => {
     const resizeObserver = new window.ResizeObserver(modifyCountToHide);
     const ref = rootRef.current;
 
     resizeObserver.observe(ref);
 
-    return () => {
-      resizeObserver.unobserve(ref);
-    };
+    return () => resizeObserver.unobserve(ref);
   }, [modifyCountToHide]);
 
   return (
@@ -71,7 +66,7 @@ const Dropout = ({ children, items }) => {
       })}
 
       {children({
-        ...getItemsData(items, countToHide - 1),
+        ...getItemsData(items, Math.max(countToHide - 1, 0)),
         getContentProps: propsGetter.shadowContent,
         getRootProps: propsGetter.shadowRoot,
       })}
