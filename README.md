@@ -53,7 +53,7 @@ const Logo = () => (
 
 const Toggle = ({ children }) => {
   const [isToggled, setIsToggled] = React.useState(false);
-  const handleToggle = () => setIsToggled((prevIsToggled) => !prevIsToggled);
+  const handleToggle = () => setIsToggled((previousIsToggled) => !previousIsToggled);
 
   return (
     <li className="navigation__item navigation__item--toggle dropdown">

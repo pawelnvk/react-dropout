@@ -24,9 +24,9 @@ const Dropout = ({ children, items }) => {
       rootRef.current.clientWidth <= contentRef.current.clientWidth;
 
     if (hasFreeSpace) {
-      setCountToHide((prevCountToHide) => prevCountToHide - 1);
+      setCountToHide((previousCountToHide) => previousCountToHide - 1);
     } else if (hasExceedingContent) {
-      setCountToHide((prevCountToHide) => prevCountToHide + 1);
+      setCountToHide((previousCountToHide) => previousCountToHide + 1);
     }
   }, []);
   const propsGetter = useMemo(

@@ -34,7 +34,7 @@ const Logo = () => (
 
 const Toggle = ({ children }) => {
   const [isToggled, setIsToggled] = React.useState(false);
-  const handleToggle = () => setIsToggled((prevIsToggled) => !prevIsToggled);
+  const handleToggle = () => setIsToggled((previousIsToggled) => !previousIsToggled);
 
   return (
     <li className="navigation__item navigation__item--toggle dropdown">
@@ -124,8 +124,8 @@ const App = () => {
                         <button
                           className="page__button button"
                           onClick={() =>
-                            setNavItems((prevNavItems) => [
-                              ...prevNavItems,
+                            setNavItems((previousNavItems) => [
+                              ...previousNavItems,
                               {
                                 page: `Item-${+new Date()}`,
                                 path: `/item-${+new Date()}`,
@@ -138,8 +138,8 @@ const App = () => {
                         <button
                           className="page__button button"
                           onClick={() =>
-                            setNavItems((prevNavItems) =>
-                              prevNavItems.filter(
+                            setNavItems((previousNavItems) =>
+                              previousNavItems.filter(
                                 (_, index, array) => index !== array.length - 1,
                               ),
                             )
